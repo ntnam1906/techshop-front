@@ -1,0 +1,16 @@
+/* .nav {
+    font-size: 14px !important;
+    padding-left: 10px !important;
+    padding-top: 8px !important;
+    padding-bottom: 0px !important;
+} */
+.pull-right {
+    margin-right: 10px !important;
+    margin-bottom: 10px !important;
+}
+.pull-right a {
+    font-size: 14px;
+}
+.pull-right a:hover {
+    color: #ccc !important;
+}

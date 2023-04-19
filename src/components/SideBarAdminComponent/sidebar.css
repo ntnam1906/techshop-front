@@ -1,0 +1,18 @@
+.sidebar {
+    margin-top: -40px !important;
+    padding-left: 0 !important;
+}
+
+.nav1.nav {
+    margin-top: 0px;
+}
+.nav li {
+    width: 100%;
+}
+.nav li a {
+    text-decoration: none;
+    font-size: 15px;
+}
+.nav li a:hover {
+    color: rgb(15, 27, 194);
+}
