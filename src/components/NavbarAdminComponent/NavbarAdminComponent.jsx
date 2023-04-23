@@ -35,4 +35,4 @@ const NavbarAdminPage = () => {
 )
 }
 
-export default NavbarAdminPage
+export default React.memo(NavbarAdminPage)

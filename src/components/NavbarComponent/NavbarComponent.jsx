@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../public/local/css/home.css'
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const NavbarComponent = () => {
+    const [data, setData] = useState({})
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/local')
+        .then(response => setData(response.data))
+        .catch(error => console.log(error))
+    }, [])
+    const categories = data.categories
     return(
     <nav>
-        <div id="menu" class="collapse navbar-collapse">
+        <div id="menu" className="collapse navbar-collapse">
             <ul>
-                <li class="menu-item">
-                    <Link class="prd-nav" to="/category/<%= category._id %>">Iphone</Link>
-                </li>
-                <li class="menu-item">
-                    <Link class="prd-nav" to="/category/<%= category._id %>">Samsung</Link>
-                </li>
-                <li class="menu-item">
-                    <Link class="prd-nav" to="/category/<%= category._id %>">Xiaomi</Link>
-                </li>
+                {categories && categories.map(category => {
+                    return(
+                        <li className="menu-item" key={category._id}>
+                            <Link className="prd-nav" to={`/category/${category._id}`}>{category.title}</Link>
+                        </li>
+                    )
+                })}
             </ul>
         </div>
     </nav>

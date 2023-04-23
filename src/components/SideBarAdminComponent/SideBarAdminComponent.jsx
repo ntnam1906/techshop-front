@@ -26,4 +26,4 @@ const SideBarAdminComponent = () => {
 )
 }
 
-export default SideBarAdminComponent
+export default React.memo(SideBarAdminComponent)

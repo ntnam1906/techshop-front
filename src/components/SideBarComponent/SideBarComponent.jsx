@@ -10,36 +10,36 @@ import { Link } from "react-router-dom";
 
 const SideBarComponent = () => {
     return(
-    <div id="sidebar" class="col-lg-4 col-md-12 col-sm-12">
+    <div id="sidebar" className="col-lg-4 col-md-12 col-sm-12">
         <div id="banner">
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#">
-                    <img class="img-fluid" src={banner1} />
+                    <img className="img-fluid" src={banner1} />
                 </Link>
             </div>
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#">
-                    <img class="img-fluid" src={banner2} />
+                    <img className="img-fluid" src={banner2} />
                 </Link>
             </div>
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#"
-                    ><img class="img-fluid" src={banner3}
+                    ><img className="img-fluid" src={banner3}
                 /></Link>
             </div>
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#"
-                    ><img class="img-fluid" src={banner4}
+                    ><img className="img-fluid" src={banner4}
                 /></Link>
             </div>
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#"
-                    ><img class="img-fluid" src={banner5}
+                    ><img className="img-fluid" src={banner5}
                 /></Link>
             </div>
-            <div class="banner-item">
+            <div className="banner-item">
                 <Link to="#"
-                    ><img class="img-fluid" src={banner6}
+                    ><img className="img-fluid" src={banner6}
                 /></Link>
             </div>
         </div>

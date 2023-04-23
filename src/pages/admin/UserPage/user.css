@@ -18,3 +18,15 @@ thead tr th {
     padding-top: -20px !important;
     height: 20px !important;
 }
+#nav-prev {
+    text-decoration: none;
+
+}
+#success-admin {
+    margin-top:6px;
+    margin-bottom: 6px;
+    background-color: rgb(128, 235, 128);
+    width: 100%;
+    padding: 5px;
+    font-weight: 600;
+}

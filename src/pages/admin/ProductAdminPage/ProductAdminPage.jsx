@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../../public/admin/css/bootstrap.css'
 import '../../../public/admin/css/styles.css'
 import '../../../public/admin/css/datepicker3.css'
@@ -8,9 +8,36 @@ import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdmi
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
+import axios from "axios";
 const ProductAdminPage = () => {
+    const [data, setData] = useState({})
+    const [status, setStatus] = useState()
+    const [shouldUpdate, setShouldUpdate] = useState(false);
+
+    const addProductSuccess = localStorage.getItem('addProductSuccess')
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/admin/product')
+        .then(response => setData(response.data))
+        .catch(error => console.log(error))
+    }, [shouldUpdate])
+
+    setTimeout(function() {
+        if(addProductSuccess) localStorage.setItem('addProductSuccess', "false")
+    },2000)
+    
+    const products = data.products
+
+    function handleRemove(id) {
+        axios.post(`http://localhost:3000/api/admin/product/delete/${id}`)
+        .then(response => {
+            setShouldUpdate(true);
+            setStatus(response.status)
+        })
+        .catch(error => console.log(error))
+    }
     return(
-        <body>
+        <React.Fragment>
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -29,11 +56,13 @@ const ProductAdminPage = () => {
                     </div>
                 </div>
                 
-                <div id="toolbar" class="btn-group">
-				<Link to="/admin/product/add" class="btn btn-success">
-					<i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
+                <div id="toolbar" className="btn-group">
+				<Link to="/admin/product/add" className="btn btn-success">
+					<i className="glyphicon glyphicon-plus"></i> Thêm sản phẩm
 				</Link>
 			</div>
+            {addProductSuccess==="true" && <div id="success-admin">Thêm sản phẩm thành công</div> }
+            {status===200 && <div id="success-admin">Xóa sản phẩm thành công</div> }
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>
                     <tr>
@@ -47,50 +76,34 @@ const ProductAdminPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>iphone XS max</td>
-                        <td>100000</td>
-                        <td>Ảnh</td>
-                        <td>Còn hàng</td>
-                        <td>Iphone</td>
-                        <td class="form-group">
-                            <Link
-                                to="/admin/product/edit/<%=product._id%>"
-                                class="btn btn-primary btn1"
-                                ><i class="glyphicon glyphicon-pencil"></i
-                            >  </Link>
-                            <Link
-                                to="/admin/product/delete/<%=product._id%>"
-                                class="btn btn-danger btn1"
-                                ><i class="glyphicon glyphicon-remove"></i
-                            ></Link>
-						</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>iphone XS max</td>
-                        <td>100000</td>
-                        <td>Ảnh</td>
-                        <td>Còn hàng</td>
-                        <td>Iphone</td>
-                        <td class="form-group">
-                            <Link
-                                to="/admin/product/edit/<%=product._id%>"
-                                class="btn btn-primary btn1"
-                                ><i class="glyphicon glyphicon-pencil"></i
-                            >  </Link>
-                            <Link
-                                to="/admin/product/delete/<%=product._id%>"
-                                class="btn btn-danger btn1"
-                                ><i class="glyphicon glyphicon-remove"></i
-                            ></Link>
-						</td>
-                    </tr>
+                    {products && products.map((product, index) => {
+                        return(
+                            <tr key={product._id}>
+                                <td>{index}</td>
+                                <td>{product.name}</td>
+                                <td>{product.price}</td>
+                                <td>Ảnh</td>
+                                <td>{product.is_stock === true ? "Còn hàng" : "Hết Hàng"}</td>
+                                <td>{product.cat_id && product.cat_id.title}</td>
+                                <td className="form-group">
+                                    <Link
+                                        to={`/admin/product/edit/${product._id}`}
+                                        className="btn btn-primary btn1"
+                                        ><i className="glyphicon glyphicon-pencil"></i
+                                    >  </Link>
+                                    <button
+                                        className="btn btn-danger btn1"
+                                        ><i className="glyphicon glyphicon-remove" onClick={() => handleRemove(product._id)}></i
+                                    ></button>
+                                </td>
+                            </tr>
+                        )
+                    })}
+
                 </tbody>
             </Table>
         </div>
-    </body>
+    </React.Fragment>
 )
 }
 

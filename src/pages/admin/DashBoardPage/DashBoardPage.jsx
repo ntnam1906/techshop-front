@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../../public/admin/css/bootstrap.css'
 import '../../../public/admin/css/styles.css'
 import '../../../public/admin/css/datepicker3.css'
@@ -7,9 +7,22 @@ import './dashboard.css'
 import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdminComponent";
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor, BsBagDash, BsChatLeftText, BsFillPersonLinesFill, BsBadgeAdFill} from 'react-icons/bs'
+import axios from "axios";
 const DashBoardPage = () => {
+    const [data, setData] = useState({})
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/admin/dashboard')
+        .then(response => setData(response.data))
+        .catch(error => console.log(error))
+    }, [])
+
+    const products = data.products
+    const users = data.users
+    const comments = data.comments
+    console.log(products)
     return(
-        <body>
+        <React.Fragment>
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -36,7 +49,7 @@ const DashBoardPage = () => {
                                     <BsBagDash className="icon"/>
                                 </div>
                                 <div className="col-sm-9 col-lg-7 widget-right">
-                                    <div className="large">2</div>
+                                    <div className="large">{products && products.length}</div>
                                     <div className="text-muted">Sản Phẩm</div>
                                 </div>
                             </div>
@@ -49,7 +62,7 @@ const DashBoardPage = () => {
                                     <BsChatLeftText className="icon"/>
                                 </div>
                                 <div className="col-sm-9 col-lg-7 widget-right">
-                                    <div className="large">3</div>
+                                    <div className="large">{comments && comments.length}</div>
                                     <div className="text-muted">Bình Luận</div>
                                 </div>
                             </div>
@@ -62,7 +75,7 @@ const DashBoardPage = () => {
                                     <BsFillPersonLinesFill className="icon" />
                                 </div>
                                 <div className="col-sm-9 col-lg-7 widget-right">
-                                    <div className="large">2</div>
+                                    <div className="large">{users && users.length}</div>
                                     <div className="text-muted">Thành Viên</div>
                                 </div>
                             </div>
@@ -84,7 +97,7 @@ const DashBoardPage = () => {
                 </div>
             </div>	
 
-    </body>
+        </React.Fragment>
 )
 }
 

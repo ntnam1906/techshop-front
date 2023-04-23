@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import '../../../public/admin/css/bootstrap.css'
 import '../../../public/admin/css/styles.css'
 import '../../../public/admin/css/datepicker3.css'
@@ -8,9 +8,40 @@ import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdmi
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
+import axios from "axios";
 const CategoryAdminPage = () => {
+    const [data, setData] = useState({})
+    const [status, setStatus] = useState()
+    const [shouldUpdate, setShouldUpdate] = useState(false);
+
+    const addCategorySuccess = localStorage.getItem('addCategorySuccess')
+    const editCategorySuccess = localStorage.getItem('editCategorySuccess')
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/admin/category')
+        .then(response => setData(response.data))
+        .catch(error => console.log(error))
+    }, [shouldUpdate])
+    setTimeout(function() {
+        if(addCategorySuccess) localStorage.setItem('addCategorySuccess', "false")
+    },2000)
+    setTimeout(function() {
+        if(editCategorySuccess) localStorage.setItem('editCategorySuccess', "false")
+    },2000)
+
+    const categories = data.categories
+
+    function handleRemove(id) {
+        axios.post(`http://localhost:3000/api/admin/category/delete/${id}`)
+        .then(response => {
+            setShouldUpdate(true);
+            setStatus(response.status)
+        })
+        .catch(error => console.log(error))
+    }
+
     return(
-        <body>
+        <React.Fragment>
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -29,11 +60,15 @@ const CategoryAdminPage = () => {
                     </div>
                 </div>
                 
-                <div id="toolbar" class="btn-group">
-				<Link to="/admin/category/add" class="btn btn-success">
-					<i class="glyphicon glyphicon-plus"></i> Thêm danh mục
+                <div id="toolbar" className="btn-group">
+				<Link to="/admin/category/add" className="btn btn-success">
+					<i className="glyphicon glyphicon-plus"></i> Thêm danh mục
 				</Link>
 			</div>
+            {addCategorySuccess==="true" && <div id="success-admin">Thêm tài khoản thành công</div> }
+            {editCategorySuccess==="true" && <div id="success-admin">Sửa tài khoản thành công</div> }
+            {status===200 && <div id="success-admin">Xóa tài khoản thành công</div> }
+
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>
                     <tr>
@@ -43,42 +78,30 @@ const CategoryAdminPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>iphone</td>
-                        <td class="form-group">
-                            <Link
-                                to="/admin/category/edit/<%=category._id%>"
-                                class="btn btn-primary btn1"
-                                ><i class="glyphicon glyphicon-pencil"></i
-                            >  </Link>
-                            <Link
-                                to="/admin/category/delete/<%=category._id%>"
-                                class="btn btn-danger btn1"
-                                ><i class="glyphicon glyphicon-remove"></i
-                            ></Link>
-						</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Sam Sung</td>
-                        <td class="form-group">
-                            <Link
-                                to="/admin/category/edit/<%=category._id%>"
-                                class="btn btn-primary btn1"
-                                ><i class="glyphicon glyphicon-pencil"></i
-                            >  </Link>
-                            <Link
-                                to="/admin/category/delete/<%=category._id%>"
-                                class="btn btn-danger btn1"
-                                ><i class="glyphicon glyphicon-remove"></i
-                            ></Link>
-						</td>
-                    </tr>
+                    {categories && categories.map(category => {
+                        return(
+                            <tr key={category._id}>
+                                <td>{category._id}</td>
+                                <td>{category.title}</td>
+                                <td className="form-group">
+                                    <Link
+                                        to={`/admin/category/edit/${category._id}`}
+                                        className="btn btn-primary btn1"
+                                        ><i className="glyphicon glyphicon-pencil"></i
+                                    >  </Link>
+                                    <button
+                                        className="btn btn-danger btn1"
+                                        ><i className="glyphicon glyphicon-remove" onClick={() => handleRemove(category._id)}></i
+                                    ></button>
+                                </td>
+                            </tr>
+                        )
+                    })}
+
                 </tbody>
             </Table>
         </div>
-    </body>
+    </React.Fragment>
 )
 }
 

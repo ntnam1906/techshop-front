@@ -1,49 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderComponent from "../../../components/HeaderComponent/HeaderComponent";
 import NavbarComponent from "../../../components/NavbarComponent/NavbarComponent";
 import SliderComponent from "../../../components/SliderComponent/SliderComponent";
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
+import axios from "axios";
+import "./loginpage.css"
+import { Link } from "react-router-dom";
+
+
 
 const LoginPage = () => {
-    return(
-    <html>
-        <body>
-            <HeaderComponent />
+	const [formData, setFormData] = useState({
+		email: "",
+		pass: ""
+	})
+	const [status, setStatus] = useState()
+	const [error, setError] = useState()
 
+	function handleSubmit(event) {
+		event.preventDefault()
+		if (formData.email && formData.pass) {
+			axios.post('http://localhost:3000/api/local/login', formData).then((res) => {
+			  // handle response
+			  	setStatus(res.status)
+			})
+			.catch((error) => {
+				setStatus(error.response.status)
+				setError(error.response.data.message)
+			})
+		  } else {
+			console.log("Please enter a username and password");
+		  } 
+		
+	}
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	  };
+	
+	// useEffect(() => {
+		
+	// }, [])
+    return(
+        <React.Fragment>
+            <HeaderComponent />
             <div id="body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-12 col-md-12 col-sm-12">
                             <NavbarComponent />
                         </div>
                     </div>
-                    <div class="row">
-                        <div id="main" class="col-lg-8 col-md-12 col-sm-12">
+                    <div className="row">
+                        <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                             <SliderComponent />
                             <br />
                             <h2>ĐĂNG NHẬP</h2>
-							<form role="form" method="post">
+							{status === 401 && <div id="errr">{error}</div>}
+							<form role="form" method="post" onSubmit={handleSubmit}>
 								<fieldset>
-									<div class="form-group">
+									<div className="form-group">
 										<input
-											class="form-control"
+											className="form-control"
 											placeholder="E-mail"
-											name="mail"
+											name="email"
 											type="email"
-											autofocus
+											value={formData.email}
+											onChange={handleChange}
+											autoFocus
 										/>
 									</div>
-									<div class="form-group">
+									<div className="form-group">
 										<input
-											class="form-control"
+											className="form-control"
 											placeholder="Mật khẩu"
 											name="pass"
 											type="password"
-											value=""
+											value={formData.pass}
+											onChange={handleChange}
 										/>
 									</div>
-									<div class="checkbox">
+									<div className="checkbox">
 										<label>
 											<input
 												name="remember"
@@ -52,14 +89,14 @@ const LoginPage = () => {
 											/> Nhớ tài khoản
 										</label>
 									</div>
-									<button type="submit" class="btn btn-primary">
+									<button type="submit" className="btn btn-primary">
 										Đăng nhập
 									</button>
 								</fieldset>
 								<br />
 								<p>
 									<span>Nếu chưa có tài khoản vui lòng </span>
-									<a href="/register"> đăng ký</a> tại đây
+									<Link to="/register"> đăng ký</Link> tại đây
 								</p>
 							</form>
                         </div>
@@ -70,8 +107,7 @@ const LoginPage = () => {
             </div>
             
             <FooterComponent />
-        </body>
-    </html>
+        </React.Fragment>
     )
 }
 

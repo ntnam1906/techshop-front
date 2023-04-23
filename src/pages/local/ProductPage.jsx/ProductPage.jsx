@@ -1,58 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../../public/local/css/home.css'
 import '../../../public/admin/css/bootstrap.css'
+import './productpage.css'
 import HeaderComponent from "../../../components/HeaderComponent/HeaderComponent";
 import NavbarComponent from "../../../components/NavbarComponent/NavbarComponent";
 import SliderComponent from "../../../components/SliderComponent/SliderComponent";
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+
+import imgg from '../../../public/admin/img/products/Nokia-1-red.png'
+import axios from "axios";
 
 const ProductPage = () => {
+	const [data, setData] = useState({})
+	const { id } = useParams()
+	
+	useEffect(() => {
+
+		const fetchData = async () => {
+			try {
+			  const { data } = await axios.get(`http://localhost:3000/api/local/product/${id}`);
+			  setData(data);
+			} catch (error) {
+			  console.log(error);
+			}
+		  };
+		
+		  fetchData();
+	}, [id])
+	const product = data.product
+
     return(
-    <html>
-        <body>
+        <React.Fragment>
             <HeaderComponent />
 
             <div id="body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-12 col-md-12 col-sm-12">
                             <NavbarComponent />
                         </div>
                     </div>
-                    <div class="row">
-                        <div id="main" class="col-lg-8 col-md-12 col-sm-12">
+                    <div className="row">
+                        <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                             <SliderComponent />
 
                             <div id="product">
-							<div id="product-head" class="row">
-								<div id="product-img" class="col-lg-6 col-md-6 col-sm-12">
-									<img src="" />
+							<div id="product-head" className="row">
+								<div id="product-img" className="col-lg-6 col-md-6 col-sm-12">
+									<img src={imgg} id="img-product"/>
 								</div>
-								<div id="product-details" class="col-lg-6 col-md-6 col-sm-12">
-									<h1>Iphone Xs Max</h1>
+								<div id="product-details" className="col-lg-6 col-md-6 col-sm-12">
+									<h1>{product && product.name}</h1>
 									<ul>
-										<li><span>Bảo hành:</span>3 tháng</li>
-										<li><span>Đi kèm:</span> Sạc</li>
-										<li><span>Tình trạng:</span> Mới 100%</li>
-										<li><span>Khuyến Mại:</span> 100%</li>
+										<li><span>Bảo hành:</span> {product && product.warranty}</li>
+										<li><span>Đi kèm:</span> {product && product.accessories}</li>
+										<li><span>Tình trạng:</span> {product && product.status}</li>
+										<li><span>Khuyến Mại:</span> {product && product.promotion}</li>
+										<li><hr/></li>
 										<li id="price">Giá Bán (chưa bao gồm VAT)</li>
-										<li id="price-number">1000đ</li>
-										<li id="status-true">Còn hàng</li>
+										<li id="price-number">{product && product.price}đ</li>
+										<li id="status-true">{product && product.is_stock == true ? 'Còn hàng' : 'Hết Hàng' }</li>
 									</ul>
-									<div class="btn-contain">
+									<div className="btn-contain">
 										<div id="add-cart">
-											<Link to="/product/add-cart/<%= product._id %>">Mua ngay</Link>
+											<Link to="/product/add-cart/<%= product._id %>" id="buy-now">Mua ngay</Link>
 										</div>
 										<div id="ibx">
-											<Link to="/inbox>">Chat để nhận tư vấn</Link>
+											<Link to="" id="ibx-now">Chat để nhận tư vấn</Link>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div id="product-body" class="row">
-								<div class="col-lg-12 col-md-12 col-sm-12">
+							<div id="product-body" className="row">
+								<div className="col-lg-12 col-md-12 col-sm-12">
 									<h3>Đánh giá về sản phẩm</h3>
 									<p>
 										Màn hình OLED có hỗ trợ HDR là một sự nâng cấp mới của Apple
@@ -98,20 +120,20 @@ const ProductPage = () => {
 								</div>
 							</div>
 
-							<div id="comment" class="row">
-								<div class="col-lg-12 col-md-12 col-sm-12">
+							<div id="comment" className="row">
+								<div className="col-lg-12 col-md-12 col-sm-12">
 									<h3>Bình luận sản phẩm</h3>
 									<form method="post">
-										<div class="form-group">
+										<div className="form-group">
 											<label>Nội dung:</label>
 											<textarea
 												name="comm_details"
 												required
 												rows="8"
-												class="form-control"
+												className="form-control"
 											></textarea>
 										</div>
-										<button type="submit" name="sbm" class="btn btn-primary">
+										<button type="submit" name="sbm" className="btn btn-primary">
 											Gửi
 										</button>
 									</form>
@@ -119,9 +141,9 @@ const ProductPage = () => {
 							</div>
 
 
-							{/* <div id="comments-list" class="row">
-								<div class="col-lg-12 col-md-12 col-sm-12">
-									<div class="comment-item">
+							{/* <div id="comments-list" className="row">
+								<div className="col-lg-12 col-md-12 col-sm-12">
+									<div className="comment-item">
 										<ul>
 											<li><b><%= comment.user_id.full_name%></b></li>
 											<li><%= comment.createdAt%></li>
@@ -142,8 +164,7 @@ const ProductPage = () => {
             </div>
             
             <FooterComponent />
-        </body>
-    </html>
+        </React.Fragment>
     )
 }
 

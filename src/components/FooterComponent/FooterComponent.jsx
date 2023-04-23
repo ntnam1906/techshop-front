@@ -5,9 +5,9 @@ const FooterComponent = () => {
     return(
     <React.Fragment>
     <div id="footer-top">
-        <div class="container">
-            <div class="row">
-                <div id="logo-2" class="col-lg-3 col-md-6 col-sm-12">
+        <div className="container">
+            <div className="row">
+                <div id="logo-2" className="col-lg-3 col-md-6 col-sm-12">
                     <h2>
                         <img id="logo-footer" src={logo} />
                     </h2>
@@ -19,17 +19,17 @@ const FooterComponent = () => {
                         Trường Đại học Ngoại ngữ, Trường Đại học Kinh tế, Trường Đại học Y Dược, Khoa Luật,...
                     </p>
                 </div>
-                <div id="address" class="col-lg-3 col-md-6 col-sm-12">
+                <div id="address" className="col-lg-3 col-md-6 col-sm-12">
                     <h3>Địa chỉ</h3>
                     <p>144 Xuân Thủy - Cầu Giấy - Hà Nội</p>
                     <p>Giảng đường 3 - Tôn Thất Thuyết - Hà Nội</p>
                 </div>
-                <div id="service" class="col-lg-3 col-md-6 col-sm-12">
+                <div id="service" className="col-lg-3 col-md-6 col-sm-12">
                     <h3>Dịch vụ</h3>
                     <p>Bảo hành rơi vỡ, ngấm nước Care Diamond</p>
                     <p>Bảo hành Care X60 rơi vỡ ngấm nước vẫn Đổi mới</p>
                 </div>
-                <div id="hotline" class="col-lg-3 col-md-6 col-sm-12">
+                <div id="hotline" className="col-lg-3 col-md-6 col-sm-12">
                     <h3>Hotline</h3>
                     <p>Phone Sale: 081 5656 456</p>
                     <p>Email: 19020379@vnu.edu.vn</p>
@@ -39,9 +39,9 @@ const FooterComponent = () => {
     </div>
 
     <div id="footer-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
+        <div className="container">
+            <div className="row">
+                <div className="col-lg-12 col-md-12 col-sm-12">
                     <p>
                         2023 © UET . All rights reserved. Developed by Nhom 9 CNPM.
                     </p>

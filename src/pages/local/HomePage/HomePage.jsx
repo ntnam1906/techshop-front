@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderComponent from "../../../components/HeaderComponent/HeaderComponent";
 import DefaultComponent from "../../../components/DefaultComponent/DefaultComponent";
 import NavbarComponent from "../../../components/NavbarComponent/NavbarComponent";
@@ -6,51 +6,76 @@ import SliderComponent from "../../../components/SliderComponent/SliderComponent
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const HomePage = () => {
+    const [data, setData] = useState({})
+    
+    useEffect(() =>{
+        axios.get('http://localhost:3000/api/local')
+        .then (response => {
+            setData(response.data)  
+        })
+        .catch (error => {
+            console.log(error)
+        })
+    }, [])
+    const featuredPrds = data.featuredPrds
+    const statusPrds = data.statusPrds
     return(
-    <html>
-        <body>
+        <React.Fragment>
             <HeaderComponent />
 
             <div id="body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-12 col-md-12 col-sm-12">
                             <NavbarComponent />
                         </div>
                     </div>
-                    <div class="row">
-                        <div id="main" class="col-lg-8 col-md-12 col-sm-12">
+                    <div className="row">
+                        <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                             <SliderComponent />
 
-                            <div class="products">
+                            <div className="products">
                                 <h3>Sản phẩm nổi bật</h3>
-                                <div class="product-list card-deck">
-                                    <div class="product-item card text-center">
-                                        <Link to="/product/<%= feature.id%>"
-                                            ><img src="/static/local/images/<%= feature.thumbnail%>"
-                                        /></Link>
-                                        <h4>
-                                            {/* <Link to="/product/<%= feature.id%>"> <%= feature.name%> </Link> */}
-                                        </h4>
-                                        {/* <p>Giá Bán: <span><%= feature.price%></span></p> */}
-                                    </div>
+                                <div className="product-list card-deck">
+                                    {featuredPrds && featuredPrds.map(feature =>{
+                                        return (
+                                            <div className="product-item card text-center" key={feature._id}>
+                                                <Link to= {`/product/${feature._id}`}
+                                                    ><img src={process.env.PUBLIC_URL + `../src/public/local/images${feature.thumbnail}`} alt="example"
+                                                /></Link>
+                                                <h4>
+                                                    <Link to={`/product/${feature._id}`}> {feature.name} </Link>
+                                                </h4>
+                                                <p>Giá Bán: <span>{feature.price}đ</span></p>
+                                            </div>
+                                        )
+                                    })}
+
+
+                                    
+                                    
                                 </div>
                             </div>
 
-                            <div class="products">
+                            <div className="products">
                                 <h3>Sản phẩm mới</h3>
-                                <div class="product-list card-deck">
-                                    <div class="product-item card text-center">
-                                        <Link to="/product/<%=newPrd.id%>"
-                                            ><img src="/static/local/images/<%= newPrd.thumbnail%>"
-                                        /></Link>
-                                        <h4>
-                                            {/* <Link to="/product/<%=newPrd.id%>"><%= newPrd.name%></Link> */}
-                                        </h4>
-                                        {/* <p>Giá Bán: <span><%= newPrd.price%></span></p> */}
-                                    </div>
+                                <div className="product-list card-deck">
+                                    {statusPrds && statusPrds.map(prod => {
+                                        return (
+                                            <div className="product-item card text-center" key={prod._id}>
+                                                <Link to= {`/product/${prod._id}`}
+                                                    ><img src={process.env.PUBLIC_URL + `../src/public/local/images${prod.thumbnail}`} alt="example"
+                                                /></Link>
+                                                <h4>
+                                                    <Link to={`/product/${prod._id}`}> {prod.name} </Link>
+                                                </h4>
+                                                <p>Giá Bán: <span>{prod.price}đ</span></p>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -61,8 +86,7 @@ const HomePage = () => {
             </div>
             
             <FooterComponent />
-        </body>
-    </html>
+        </React.Fragment>
     )
 }
 
