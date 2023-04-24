@@ -4,23 +4,29 @@ import '../../../public/admin/css/styles.css'
 import '../../../public/admin/css/datepicker3.css'
 import '../../../public/admin/css/bootstrap-table.css'
 import './dashboard.css'
+import jwt_decode from "jwt-decode"
 import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdminComponent";
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor, BsBagDash, BsChatLeftText, BsFillPersonLinesFill, BsBadgeAdFill} from 'react-icons/bs'
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const DashBoardPage = () => {
+    const navigate = useNavigate()
     const [data, setData] = useState({})
-
+    const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/dashboard')
+        axios.get('http://localhost:3000/api/admin/dashboard', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => setData(response.data))
-        .catch(error => console.log(error))
+        .catch(error => navigate('/admin/login'))
     }, [])
 
     const products = data.products
     const users = data.users
     const comments = data.comments
-    console.log(products)
     return(
         <React.Fragment>
             <NavbarAdminPage />

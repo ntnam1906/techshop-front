@@ -8,7 +8,7 @@ import SliderComponent from "../../../components/SliderComponent/SliderComponent
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import { Link, useParams } from "react-router-dom";
-
+import { Buffer } from "buffer";
 import imgg from '../../../public/admin/img/products/Nokia-1-red.png'
 import axios from "axios";
 
@@ -30,6 +30,8 @@ const ProductPage = () => {
 		  fetchData();
 	}, [id])
 	const product = data.product
+	const imageUrl = product && URL.createObjectURL(new Blob([product.thumbnail.data.data], {type: product.thumbnail.contentType}));
+	console.log(imageUrl)
 
     return(
         <React.Fragment>
@@ -49,7 +51,7 @@ const ProductPage = () => {
                             <div id="product">
 							<div id="product-head" className="row">
 								<div id="product-img" className="col-lg-6 col-md-6 col-sm-12">
-									<img src={imgg} id="img-product"/>
+								{product && <img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name} id="img-product"/>}
 								</div>
 								<div id="product-details" className="col-lg-6 col-md-6 col-sm-12">
 									<h1>{product && product.name}</h1>

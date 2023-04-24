@@ -20,11 +20,16 @@ const AddUserPage = () => {
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
     const navigate = useNavigate()
+    const access_token = localStorage.getItem('access_admin_token')
 
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass && formData.role && formData.full_name) {
-			axios.post('http://localhost:3000/api/admin/user/add', formData).then((res) => {
+			axios.post('http://localhost:3000/api/admin/user/add', formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }
+            }).then((res) => {
 			  // handle response
                 if(res.status === 201) {
                     localStorage.setItem('addUserSuccess', true)
@@ -72,7 +77,7 @@ const AddUserPage = () => {
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <div className="col-md-8">
-                                    <form role="form" method="post" onSubmit={handleSubmit}>
+                                    <form role="form" method="post" onSubmit={handleSubmit} encType="multipart/form-data">
                                         <div className="form-group">
                                             <label>Họ & Tên</label>
                                             <input 

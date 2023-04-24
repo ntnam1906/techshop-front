@@ -27,10 +27,18 @@ const AddProductAdminPage = () => {
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
     const [categories, setCategories] = useState()
+	const [file, setFile] = useState(null)
+	const [previewImage, setPreviewImage] = useState(null);
+
     const navigate = useNavigate()
+    const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/category')
+        axios.get('http://localhost:3000/api/admin/category', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => setCategories(response.data.categories))
         .catch(error => console.log(error))
     }, [])
@@ -50,7 +58,12 @@ const AddProductAdminPage = () => {
         formdata.append("prd_featured", formData.prd_featured);
         formdata.append("prd_details", formData.prd_details);
         console.log(formData)
-        axios.post('http://localhost:3000/api/admin/product/add', formData).then((res) => {
+        axios.post('http://localhost:3000/api/admin/product/add', formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+				'token': `Beare ${access_token}`
+			}
+		}).then((res) => {
             // handle response
             if(res.status === 201) {
                 localStorage.setItem('addProductSuccess', true)
@@ -69,10 +82,21 @@ const AddProductAdminPage = () => {
 	  };
 
     const handleFileChange = (event) => {
-    setFormData({
-        ...formData,
-        thumbnail: event.target.files[0] // Lấy file ảnh từ input
-    });
+		const selectedFile = event.target.files[0];
+		setFile(selectedFile);
+		if (!selectedFile) {
+			setPreviewImage(null);
+			return;
+		  }
+		  const reader = new FileReader();
+		  reader.onload = () => {
+			setPreviewImage(reader.result);
+		  };
+		  reader.readAsDataURL(selectedFile);
+		setFormData({
+			...formData,
+			thumbnail: event.target.files[0] // Lấy file ảnh từ input
+		});
     }
     return(
 
@@ -179,9 +203,7 @@ const AddProductAdminPage = () => {
 
 										<input name="thumbnail" required type="file"  onChange={handleFileChange} />
 										<br />
-										{/* <div>
-											<img src="" alt="UET" />
-										</div> */}
+										{previewImage && <img src={previewImage} alt="Preview" id="img-admin" />}
 									</div>
 									<div className="form-group">
 										<label>Danh mục</label>

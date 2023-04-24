@@ -2,8 +2,27 @@ import React from "react";
 import '../../public/local/css/home.css'
 import '../../public/local/css/bootstrap.css'
 import logo from '../../public/local/images/Tech-Shop-Logo.png'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode"
+import Dropdown from 'react-bootstrap/Dropdown';
+import axios from "axios";
 const HeaderComponent = () => {
+  const navigate = useNavigate()
+  const access_token = localStorage.getItem('access_token')
+  let decoded = []
+  if(access_token) {
+    decoded = jwt_decode(access_token)
+  }
+  console.log(decoded)
+function handleLogOut() {
+  localStorage.removeItem('access_token')
+  axios.post('http://localhost:3000/api/local/logout')
+  .then(response => {
+    navigate('/login')
+  })
+  .catch(error => console.log(error))
+}
+  
   return (
     <React.Fragment>
       <div id="header">
@@ -33,20 +52,33 @@ const HeaderComponent = () => {
                 </button>
               </form>
             </div>
-            <div id="cart" className="col-lg-3 col-md-3 col-sm-12">
-              {/* <% if(!loggedIn) { %> */}
-              <button className="btn-log btn-danger">
-                <Link to="/login" className="mt-4 mr-2 login" >Đăng nhập</Link>
-              </button>
-              <button className="btn-register">
-                <Link to="/register" className="mt-4 mr-2 register" >Đăng ký</Link>
-              </button>
-              {/* <%} else if(loggedIn) {%>
-              <a className="mt-4 mr-2 hv" href="/logout">Đăng xuất</a>
-              <a className="mt-4 hv" href="/cart">Giỏ hàng</a>
-              <span className="mt-3 mr-3"><%= cartPrds%></span> */}
-				
-            </div>
+            
+              {decoded.isActivated === true ? 
+              (<div className="col-lg-3 col-md-3 col-sm-12">
+                <Dropdown id="drd-token">
+                  <Dropdown.Toggle variant="success" id="dropdown-basic" className="bg-transparent border-0">
+                    Xin chào, {decoded.full_name}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="/change-password">Đổi mật khẩu</Dropdown.Item>
+                    <Dropdown.Item href="/cart">Giỏ hàng</Dropdown.Item>
+                    <Dropdown.Item href="" onClick={handleLogOut}>Đăng xuất</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                </div>
+              )
+              :
+              (<div id="cart" className="col-lg-3 col-md-3 col-sm-12">
+                <button className="btn-log btn-danger">
+                    <Link to="/login" className="mt-4 mr-2 login" >Đăng nhập</Link>
+                </button>
+                <button className="btn-register">
+                    <Link to="/register" className="mt-4 mr-2 register" >Đăng ký</Link>
+                </button>
+                </div>)
+              }
+            
           </div>
         </div>
         
@@ -63,4 +95,4 @@ const HeaderComponent = () => {
   );
 };
 
-export default HeaderComponent;
+export default React.memo(HeaderComponent);

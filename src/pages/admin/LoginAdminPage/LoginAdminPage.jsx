@@ -5,6 +5,7 @@ import '../../../public/admin/css/datepicker3.css'
 import '../../../public/admin/css/bootstrap-table.css'
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const LoginAdminPage = () => {
     const [formData, setFormData] = useState({
 		email: "",
@@ -12,13 +13,15 @@ const LoginAdminPage = () => {
 	})
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
+	const navigate = useNavigate()
 
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
 			axios.post('http://localhost:3000/api/admin/login', formData).then((res) => {
 			  // handle response
-			  	setStatus(res.status)
+                navigate('/admin/dashboard')
+                localStorage.setItem('access_admin_token', res.data?.access_token)
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -48,7 +51,7 @@ const LoginAdminPage = () => {
                                         placeholder="E-mail" 
                                         name="email" 
                                         type="email" 
-                                        autofocus
+                                        autoFocus
                                         value={formData.email}
                                         onChange={handleChange}
                                         required

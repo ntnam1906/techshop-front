@@ -7,20 +7,28 @@ import Table from 'react-bootstrap/Table';
 import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdminComponent";
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor} from 'react-icons/bs'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
 const CategoryAdminPage = () => {
-    const [data, setData] = useState({})
+    const [categories, setCategories] = useState([])
     const [status, setStatus] = useState()
     const [shouldUpdate, setShouldUpdate] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const addCategorySuccess = localStorage.getItem('addCategorySuccess')
     const editCategorySuccess = localStorage.getItem('editCategorySuccess')
 
+    const navigate = useNavigate()
+    const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/category')
-        .then(response => setData(response.data))
-        .catch(error => console.log(error))
+        axios.get('http://localhost:3000/api/admin/category' , {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
+        .then(response => setCategories(response.data.categories))
+        .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
     setTimeout(function() {
         if(addCategorySuccess) localStorage.setItem('addCategorySuccess', "false")
@@ -28,16 +36,21 @@ const CategoryAdminPage = () => {
     setTimeout(function() {
         if(editCategorySuccess) localStorage.setItem('editCategorySuccess', "false")
     },2000)
-
-    const categories = data.categories
-
+    const totalCategories = categories.length
     function handleRemove(id) {
-        axios.post(`http://localhost:3000/api/admin/category/delete/${id}`)
+        axios.post(`http://localhost:3000/api/admin/category/delete/${id}`, {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)
         })
         .catch(error => console.log(error))
+    }
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     }
 
     return(
@@ -100,6 +113,12 @@ const CategoryAdminPage = () => {
 
                 </tbody>
             </Table>
+            <PaginationComponent
+            totalItems={totalCategories}
+            itemsPerPage={10}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
     </React.Fragment>
 )

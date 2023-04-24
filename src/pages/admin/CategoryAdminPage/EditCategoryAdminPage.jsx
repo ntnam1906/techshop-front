@@ -18,9 +18,14 @@ const EditCategoryPage = () => {
 	const [error, setError] = useState()
     const { id } = useParams()
     const [data, setData] = useState({})
+    const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/category')
+        axios.get('http://localhost:3000/api/admin/category', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => {
             setData(response.data.categories)
         })
@@ -31,7 +36,11 @@ const EditCategoryPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.cat_name) {
-			axios.post(`http://localhost:3000/api/admin/category/edit/${id}`, formData).then((res) => {
+			axios.post(`http://localhost:3000/api/admin/category/edit/${id}`, formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }
+            }).then((res) => {
 			  // handle response
                 if(res.status === 200) {
                     localStorage.setItem('editCategorySuccess', true)

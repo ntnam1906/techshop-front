@@ -10,24 +10,35 @@ import './user.css'
 import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
 import axios from "axios";
-import PaginationAdminComponent from "../../../components/PaginationAdminComponent/PaginationAdminComponent";
+import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
+import jwt_decode from "jwt-decode"
+
 const UserPage = () => {
-    const [data, setData] = useState({})
+    const [users, setUsers] = useState([])
     const [status, setStatus] = useState()
     const [shouldUpdate, setShouldUpdate] = useState(false);
-    // const [currentPage, setCurrentPage] = useState(1);
-    // const [pages, setPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const addUserSuccess = localStorage.getItem('addUserSuccess')
     const editUserSuccess = localStorage.getItem('editUserSuccess')
+    const access_token = localStorage.getItem('access_admin_token')
+    let decoded = []
+    if(access_token) {
+        decoded = jwt_decode(access_token)
+    }
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/user')
-        .then(response => {
-            setData(response.data)
-            // setPages(response.data.pages)
-        })
-        .catch(error => console.log(error))
-    }, [shouldUpdate])
+        async function fetchData() {
+          const response = await axios.get(`http://localhost:3000/api/admin/user?page=${currentPage}`, {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        });
+          setUsers(response.data.users);
+        }
+        fetchData();
+      }, [currentPage, shouldUpdate]);
+      const totalUsers = users.length
+
     setTimeout(function() {
         if(addUserSuccess) localStorage.setItem('addUserSuccess', "false")
     },2000)
@@ -35,20 +46,23 @@ const UserPage = () => {
         if(editUserSuccess) localStorage.setItem('editUserSuccess', "false")
     },2000)
 
-    const users = data.users
 
     function handleRemove(id) {
-        axios.post(`http://localhost:3000/api/admin/user/delete/${id}`)
+        axios.post(`http://localhost:3000/api/admin/user/delete/${id}`, {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)
         })
         .catch(error => console.log(error))
     }
-    // const handlePageChange = (pageNumber) => {
-    //     setCurrentPage(pageNumber)
-    // }
-
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
+    
     return(
 
         <React.Fragment>
@@ -86,17 +100,19 @@ const UserPage = () => {
                             <th data-field="name" data-sortable="true">Họ và Tên</th>
                             <th data-field="price" data-sortable="true">Email</th>
                             <th>Quyền</th>
+                            <th>Kích hoạt</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {users && users.map(user => {
+                        {users.map(user => {
                             return (
                             <tr key={user._id}>
                                 <td>{user._id}</td>
                                 <td>{user.full_name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.role === 'admin' ? <span className="label label-danger">{user.role}</span> : <span className="label label-warning">{user.role}</span>}</td>
+                                <td>{user.isActivated === true ? "Đã kích hoạt": "Chưa kích hoạt"}</td>
                                 <td className="form-group">
                                     <Link
                                         to={`/admin/user/edit/${user._id}`}
@@ -114,7 +130,12 @@ const UserPage = () => {
                         
                     </tbody>
                 </Table>
-               
+                <PaginationComponent
+                totalItems={totalUsers}
+                itemsPerPage={10}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </div>
     </React.Fragment>
 )

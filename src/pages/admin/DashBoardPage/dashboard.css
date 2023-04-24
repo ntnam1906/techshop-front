@@ -8,3 +8,7 @@ body {
 .icon {
     font-size: 45px !important;
 }
+#img-admin {
+    height: 100px;
+    margin-left: 20px;
+}

@@ -5,29 +5,31 @@ import SliderComponent from "../../../components/SliderComponent/SliderComponent
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
-import { useNavigate  } from 'react-router-dom'
 
-const RegisterPage = () => {
+const ChangePasswordPage = () => {
 
 	const [formData, setFormData] = useState({
-        full_name: "",
-		email: "",
-		pass: "",
-        re_pass: ""
+        currentPassword: "",
+		newPassword: "",
 	})
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
-    const navigate = useNavigate()
+    const access_token = localStorage.getItem('access_token')
 
 	function handleSubmit(event) {
 		event.preventDefault()
-		if (formData.email && formData.pass && formData.re_pass && formData.full_name) {
-			axios.post('http://localhost:3000/api/local/register', formData).then((res) => {
+		if (formData.currentPassword && formData.newPassword ) {
+			axios.post('http://localhost:3000/api/local/change-password', formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }
+            }).then((res) => {
 			  // handle response
-              if(res.status === 201) {
-                localStorage.setItem('registerSuccess', true)
-                navigate('/login')
-            }
+			  	setStatus(res.status)
+                if(res.status === 200) {
+                    formData.currentPassword = ""
+                    formData.newPassword = ""
+                }
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -59,58 +61,37 @@ const RegisterPage = () => {
                         <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                             <SliderComponent />
                             <br />
-                            <h2>ĐĂNG KÝ</h2>
-                            {status === 401 && <div id="errr">{error}</div>}
+                            <h2>Đổi mật khẩu</h2>
+                            {status === 200 && <div id="success-admin">Đổi mật khẩu thành công</div>}
+                            {status === 400 && <div id="errr">{error}</div>}
                             <div className="panel-body">
                                 <form role="form" method="post" onSubmit={handleSubmit}>
                                     <fieldset>
                                         <div className="form-group">
-                                            <label>Họ & Tên</label>
+                                            <label>Mật khẩu cũ</label>
                                             <input
-                                                name="full_name"
+                                                name="currentPassword"
                                                 className="form-control"
-                                                placeholder="VD: Nguyen Van A"
-                                                value={formData.full_name}
+                                                type="password"
+                                                value={formData.currentPassword}
 											    onChange={handleChange}
                                                 autoFocus
                                                 required
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>Email</label>
+                                            <label>Mật khẩu mới</label>
                                             <input
-                                                name="email"
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="VD: exemple@gmail.com"
-                                                value={formData.email}
-											    onChange={handleChange}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Mật khẩu</label>
-                                            <input 
-                                                name="pass" 
-                                                type="password" 
-                                                className="form-control"
-                                                value={formData.pass}
-											    onChange={handleChange}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Nhập lại mật khẩu</label>
-                                            <input
-                                                name="re_pass"
+                                                name="newPassword"
                                                 type="password"
                                                 className="form-control"
-                                                value={formData.re_pass}
+                                                value={formData.newPassword}
 											    onChange={handleChange}
                                                 required
                                             />
                                         </div>
-                                        <button type="submit" className="btn btn-primary">Đăng ký</button>
+                                        
+                                        <button type="submit" className="btn btn-primary">Đổi mật khẩu</button>
                                     </fieldset>
                                 </form>
                             </div>
@@ -126,4 +107,4 @@ const RegisterPage = () => {
     )
 }
 
-export default RegisterPage
+export default ChangePasswordPage

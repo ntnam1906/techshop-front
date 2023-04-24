@@ -5,7 +5,7 @@ import axios from "axios";
 
 const NavbarComponent = () => {
     const [data, setData] = useState({})
-
+    
     useEffect(() => {
         axios.get('http://localhost:3000/api/local')
         .then(response => setData(response.data))

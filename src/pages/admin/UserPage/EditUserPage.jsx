@@ -23,23 +23,30 @@ const EditUserPage = () => {
 	const [error, setError] = useState()
     const { id } = useParams()
     const [data, setData] = useState({})
+    const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/user')
+        axios.get('http://localhost:3000/api/admin/user', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => {
             setData(response.data.users)
         })
         .catch(error => console.log(error))
     }, [])
-    console.log(data)
     const user = _.find(data, {_id: id})
-    console.log(user)
     const navigate = useNavigate()
 
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass && formData.role && formData.full_name) {
-			axios.post(`http://localhost:3000/api/admin/user/edit/${id}`, formData).then((res) => {
+			axios.post(`http://localhost:3000/api/admin/user/edit/${id}`, formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }
+            }).then((res) => {
 			  // handle response
                 if(res.status === 201) {
                     localStorage.setItem('editUserSuccess', true)

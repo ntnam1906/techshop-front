@@ -7,34 +7,54 @@ import Table from 'react-bootstrap/Table';
 import NavbarAdminPage from "../../../components/NavbarAdminComponent/NavbarAdminComponent";
 import SideBarAdminComponent from "../../../components/SideBarAdminComponent/SideBarAdminComponent";
 import {BsHouseDoor} from 'react-icons/bs'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Buffer } from "buffer";
+import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
 const ProductAdminPage = () => {
-    const [data, setData] = useState({})
+    const [products, setProducts] = useState([])
     const [status, setStatus] = useState()
     const [shouldUpdate, setShouldUpdate] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const addProductSuccess = localStorage.getItem('addProductSuccess')
+    const editProductSuccess = localStorage.getItem('editProductSuccess')
+
+    const navigate = useNavigate();
+    const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/product')
-        .then(response => setData(response.data))
-        .catch(error => console.log(error))
+        axios.get('http://localhost:3000/api/admin/product', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
+        .then(response => setProducts(response.data.products))
+        .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
 
     setTimeout(function() {
         if(addProductSuccess) localStorage.setItem('addProductSuccess', "false")
     },2000)
-    
-    const products = data.products
+    setTimeout(function() {
+        if(editProductSuccess) localStorage.setItem('editProductSuccess', "false")
+    },2000)
 
+    const totalProducts = products.length
     function handleRemove(id) {
-        axios.post(`http://localhost:3000/api/admin/product/delete/${id}`)
+        axios.post(`http://localhost:3000/api/admin/product/delete/${id}`, {
+            headers: {
+                'token': `Beare ${access_token}`
+            }
+        })
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)
         })
         .catch(error => console.log(error))
+    }
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     }
     return(
         <React.Fragment>
@@ -62,6 +82,7 @@ const ProductAdminPage = () => {
 				</Link>
 			</div>
             {addProductSuccess==="true" && <div id="success-admin">Thêm sản phẩm thành công</div> }
+            {editProductSuccess==="true" && <div id="success-admin">Cập nhật sản phẩm thành công</div> }
             {status===200 && <div id="success-admin">Xóa sản phẩm thành công</div> }
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>
@@ -82,7 +103,7 @@ const ProductAdminPage = () => {
                                 <td>{index}</td>
                                 <td>{product.name}</td>
                                 <td>{product.price}</td>
-                                <td>Ảnh</td>
+                                <td><img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name} id="img-admin"/></td>
                                 <td>{product.is_stock === true ? "Còn hàng" : "Hết Hàng"}</td>
                                 <td>{product.cat_id && product.cat_id.title}</td>
                                 <td className="form-group">
@@ -102,6 +123,12 @@ const ProductAdminPage = () => {
 
                 </tbody>
             </Table>
+            <PaginationComponent
+            totalItems={totalProducts}
+            itemsPerPage={10}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
     </React.Fragment>
 )

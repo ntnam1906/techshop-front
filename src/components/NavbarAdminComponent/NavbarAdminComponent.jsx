@@ -2,9 +2,20 @@ import React from "react";
 import '../../public/admin/css/bootstrap.css'
 import '../../public/admin/css/styles.css'
 import './navbar.css'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {BsFillAirplaneEnginesFill} from 'react-icons/bs'
+import axios from "axios";
 const NavbarAdminPage = () => {
+    const navigate = useNavigate()
+    function handleLogOut() {
+        localStorage.removeItem('access_admin_token')
+
+        axios.post('http://localhost:3000/api/admin/logout')
+        .then(response => {
+          navigate('/admin/login')
+        })
+        .catch(error => console.log(error))
+      }
     return(
     <nav className="navbar navbar-inverse navbar-fixed-top nav" role="navigation">
         <div className="container-fluid">
@@ -25,7 +36,7 @@ const NavbarAdminPage = () => {
                 </Link>
                 <ul className="user-menu">
                     <li className="pull-right">
-                        <Link to="logout">Đăng xuất</Link>
+                        <Link to="" onClick={handleLogOut}>Đăng xuất</Link>
                     </li>
                 </ul>
             </div>

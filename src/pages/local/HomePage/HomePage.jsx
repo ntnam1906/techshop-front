@@ -7,14 +7,14 @@ import SideBarComponent from "../../../components/SideBarComponent/SideBarCompon
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import { Buffer } from "buffer";
 const HomePage = () => {
     const [data, setData] = useState({})
     
     useEffect(() =>{
         axios.get('http://localhost:3000/api/local')
         .then (response => {
-            setData(response.data)  
+            setData(response.data)
         })
         .catch (error => {
             console.log(error)
@@ -43,9 +43,9 @@ const HomePage = () => {
                                     {featuredPrds && featuredPrds.map(feature =>{
                                         return (
                                             <div className="product-item card text-center" key={feature._id}>
-                                                <Link to= {`/product/${feature._id}`}
-                                                    ><img src={process.env.PUBLIC_URL + `../src/public/local/images${feature.thumbnail}`} alt="example"
-                                                /></Link>
+                                                <Link to= {`/product/${feature._id}`}>
+                                                    <img src={`data:${feature.thumbnail.contentType};base64,${Buffer.from(feature.thumbnail.data).toString('base64')}`} alt={feature.name}/>
+                                                </Link>
                                                 <h4>
                                                     <Link to={`/product/${feature._id}`}> {feature.name} </Link>
                                                 </h4>
@@ -66,9 +66,9 @@ const HomePage = () => {
                                     {statusPrds && statusPrds.map(prod => {
                                         return (
                                             <div className="product-item card text-center" key={prod._id}>
-                                                <Link to= {`/product/${prod._id}`}
-                                                    ><img src={process.env.PUBLIC_URL + `../src/public/local/images${prod.thumbnail}`} alt="example"
-                                                /></Link>
+                                                <Link to= {`/product/${prod._id}`}>
+                                                    <img src={`data:${prod.thumbnail.contentType};base64,${Buffer.from(prod.thumbnail.data).toString('base64')}`} alt={prod.name}/>
+                                                </Link>
                                                 <h4>
                                                     <Link to={`/product/${prod._id}`}> {prod.name} </Link>
                                                 </h4>

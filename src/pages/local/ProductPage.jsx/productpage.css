@@ -1,7 +1,7 @@
 #product-head {
-    height: 450px;
+    height: 420px;
     margin-top: 30px;
-    background-color: rgb(248, 242, 242);
+    background-color: rgb(241, 239, 239);
 }
 
 #product-details ul li {
@@ -46,7 +46,7 @@
     background-color: rgb(17, 122, 241);
 }
 #img-product {
-    margin-left: 38px;
+    margin-left: 60px;
 }
 #product-body {
     margin-top: 10px;
@@ -54,7 +54,7 @@
 
 @media (max-width:760px){
 	#product-head{
-		height: 700px;
+		height: 730px;
     }
 	
 }

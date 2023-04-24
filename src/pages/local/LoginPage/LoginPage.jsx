@@ -7,8 +7,8 @@ import FooterComponent from "../../../components/FooterComponent/FooterComponent
 import axios from "axios";
 import "./loginpage.css"
 import { Link } from "react-router-dom";
-
-
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode"
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -17,23 +17,33 @@ const LoginPage = () => {
 	})
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
+	const navigate = useNavigate()
+    const registerSuccess = localStorage.getItem('registerSuccess')
 
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
 			axios.post('http://localhost:3000/api/local/login', formData).then((res) => {
-			  // handle response
-			  	setStatus(res.status)
+				navigate('/')
+				localStorage.setItem('access_token', res.data?.access_token)
+				
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
 				setError(error.response.data.message)
+				if(error.response.data.message === "User is not activated") {
+					localStorage.setItem('access_token', error.response.data?.access_token)
+					navigate('/active')
+				}
 			})
 		  } else {
 			console.log("Please enter a username and password");
 		  } 
 		
 	}
+	setTimeout(function() {
+        if(registerSuccess) localStorage.setItem('registerSuccess', "false")
+    },2000)
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
@@ -57,6 +67,7 @@ const LoginPage = () => {
                             <br />
                             <h2>ĐĂNG NHẬP</h2>
 							{status === 401 && <div id="errr">{error}</div>}
+							{registerSuccess==="true" && <div id="success-admin">Đăng ký thành công. Vui lòng đăng nhập</div> }
 							<form role="form" method="post" onSubmit={handleSubmit}>
 								<fieldset>
 									<div className="form-group">
@@ -96,7 +107,7 @@ const LoginPage = () => {
 								<br />
 								<p>
 									<span>Nếu chưa có tài khoản vui lòng </span>
-									<Link to="/register"> đăng ký</Link> tại đây
+									<Link to="/register"> đăng ký</Link> tại đây. <Link to="/forgot-pass"> Quên mật khẩu</Link>
 								</p>
 							</form>
                         </div>

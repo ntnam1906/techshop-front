@@ -17,11 +17,15 @@ const AddCategoryPage = () => {
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
     const navigate = useNavigate()
-
+    const access_token = localStorage.getItem('access_admin_token')
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.cat_name) {
-			axios.post('http://localhost:3000/api/admin/category/add', formData).then((res) => {
+			axios.post('http://localhost:3000/api/admin/category/add', formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }
+            }).then((res) => {
 			  // handle response
                 if(res.status === 201) {
                     localStorage.setItem('addCategorySuccess', true)

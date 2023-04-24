@@ -11,9 +11,11 @@ import AddUserPage from "../pages/admin/UserPage/AddUserPage";
 import EditUserPage from "../pages/admin/UserPage/EditUserPage";
 import UserPage from "../pages/admin/UserPage/UserPage";
 import CategoryPage from "../pages/local/CategoryPage/CategoryPage";
+import ChangePasswordPage from "../pages/local/ChangePasswordPage/ChangePasswordPage";
 import HomePage from "../pages/local/HomePage/HomePage";
 import LoginPage from "../pages/local/LoginPage/LoginPage";
 import ProductPage from "../pages/local/ProductPage.jsx/ProductPage";
+import ActivateAccountPage from "../pages/local/RegisterPage/ActivateAccountPage";
 import RegisterPage from "../pages/local/RegisterPage/RegisterPage";
 import SearchPage from "../pages/local/SearchPage/SearchPage";
 
@@ -24,23 +26,31 @@ export const routes = [
         page: HomePage,
     },
     {
-        path: '/search?:keyword',
-        page: SearchPage,
-    },
-    {
         path: '/login',
         page: LoginPage,
-    },
-    {
-        path: '/product/:id',
-        page: ProductPage,
     },
     {
         path: '/register',
         page: RegisterPage,
     },
     {
+        path: '/active',
+        page: ActivateAccountPage,
+    },
+    {
+        path: '/change-password',
+        page: ChangePasswordPage,
+    },
+    {
+        path: '/product/:id',
+        page: ProductPage,
+    },
+    {
         path: '/search',
+        page: SearchPage,
+    },
+    {
+        path: '/search?:keyword',
         page: SearchPage,
     },
     {
@@ -64,6 +74,10 @@ export const routes = [
         page: UserPage,
     },
     {
+        path: '/admin/user?page=:page',
+        page: UserPage,
+    },
+    {
         path: '/admin/user/add',
         page: AddUserPage,
     },
@@ -73,6 +87,10 @@ export const routes = [
     },
     {
         path: '/admin/category',
+        page: CategoryAdminPage,
+    },
+    {
+        path: '/admin/category?page=:page',
         page: CategoryAdminPage,
     },
     {
@@ -88,6 +106,10 @@ export const routes = [
         page: ProductAdminPage,
     },
     {
+        path: '/admin/product?page=:page',
+        page: ProductAdminPage,
+    },
+    {
         path: '/admin/product/add',
         page: AddProductAdminPage,
     },
@@ -95,8 +117,5 @@ export const routes = [
         path: '/admin/product/edit/:id',
         page: EditProductAdminPage,
     },
-    {
-        path: '*',
-        page: NotFoundPage
-    },
+    
 ]

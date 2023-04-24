@@ -8,20 +8,27 @@ import '../../../public/local/css/search.css'
 import '../../../public/local/css/bootstrap.css'
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-
+import { Buffer } from "buffer";
+import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
 const SearchPage = () => {
     const[data, setData] = useState({})
+    const[dataPrd, setDataPrd] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
     const localtion = useLocation()
     const keyword = new URLSearchParams(localtion.search).get('keyword')
 
     useEffect(() =>{
         axios.get(`http://localhost:3000/api/local/search?keyword=${keyword}`)
-        .then(response => setData(response.data))
+        .then(response => {
+            setData(response.data)
+            setDataPrd(response.data.dataPrd)
+        })
         .catch(error => console.log(error))
     }, [])
-    const dataPrd = data.dataPrd
-
-
+    const totalProducts = dataPrd.length
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
     return(
         <React.Fragment>
             <HeaderComponent />
@@ -47,8 +54,8 @@ const SearchPage = () => {
                                     return (
                                         <div className="product-item card text-center" key={product._id}>
                                             <Link to={`/product/${product._id}`}>
-                                                <img src="" alt="UET"
-                                            /></Link>
+                                                <img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name}/>
+                                            </Link>
                                             <h4>
                                                 <Link to={`/product/${product._id}`}>{product.name}</Link>
                                             </h4>
@@ -63,7 +70,12 @@ const SearchPage = () => {
                                    }
                                 </div>
                             </div>
-                            {/* Pagination */}
+                            <PaginationComponent
+                                totalItems={totalProducts}
+                                itemsPerPage={10}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
+                            />
                         </div>
 
                         <SideBarComponent />
