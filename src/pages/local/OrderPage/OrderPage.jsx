@@ -9,16 +9,16 @@ import { Link } from "react-router-dom";
 import "../../../public/local/css/cart.css"
 
 
-const CartPage = () => {
-	// const [data, setData] = useState()
+const OrderPage = () => {
+	const [data, setData] = useState()
 
-    // useEffect(() => {
-    //     axios.get('http://localhost:3000/api/local/cart')
-    //     .then(response => setData(response.data))
-    //     .catch(error => console.log(error))
-    // }, [])
-    // const dataCart = data.dataCart
-    // const totalMoney = data.totalMoney
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/local/cart')
+        .then(response => setData(response.data))
+        .catch(error => console.log(error))
+    }, [])
+    const dataCart = data.dataCart
+    const totalMoney = data.totalMoney
     return(
         <React.Fragment>
             <HeaderComponent />
@@ -35,7 +35,7 @@ const CartPage = () => {
                             <div id="my-cart">
                                 <div class="row">
                                     <div class="cart-nav-item col-lg-7 col-md-7 col-sm-12">
-                                        Thông tin sản phẩm
+                                        Lịch sử đơn hàng
                                     </div>
                                     <div class="cart-nav-item col-lg-2 col-md-2 col-sm-12">
                                         Tùy chọn
@@ -43,7 +43,7 @@ const CartPage = () => {
                                     <div class="cart-nav-item col-lg-3 col-md-3 col-sm-12">Giá</div>
                                 </div>
                                 <form method="post" action="/cart-reload">
-                                    {/* {dataCart && dataCart.map(cart => {
+                                    {dataCart && dataCart.map(cart => {
                                         return (
                                             <div class="cart-item row">
                                                 <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
@@ -68,17 +68,26 @@ const CartPage = () => {
                                                 </div>
                                             </div>
                                         )
-                                    })} */}
+                                    })}
 
 
                                     
                                     <div class="row">
-                                        
+                                        <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
+                                            <button
+                                                id="update-cart"
+                                                class="btn btn-success"
+                                                type="submit"
+                                                name="sbm"
+                                            >
+                                                Cập nhật giỏ hàng
+                                            </button>
+                                        </div>
                                         <div class="cart-total col-lg-2 col-md-2 col-sm-12">
                                             <b>Tổng cộng:</b>
                                         </div>
                                         <div class="cart-price col-lg-3 col-md-3 col-sm-12">
-                                            {/* <b>{totalMoney} đ</b> */}
+                                            <b>{totalMoney} đ</b>
                                         </div>
                                     </div>
                                 </form>
@@ -152,4 +161,4 @@ const CartPage = () => {
     )
 }
 
-export default CartPage
+export default OrderPage

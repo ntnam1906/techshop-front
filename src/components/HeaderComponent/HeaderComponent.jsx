@@ -63,6 +63,7 @@ function handleLogOut() {
                   <Dropdown.Menu>
                     <Dropdown.Item href="/change-password">Đổi mật khẩu</Dropdown.Item>
                     <Dropdown.Item href="/cart">Giỏ hàng</Dropdown.Item>
+                    <Dropdown.Item href="/order">Lịch sử đơn hàng</Dropdown.Item>
                     <Dropdown.Item href="" onClick={handleLogOut}>Đăng xuất</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

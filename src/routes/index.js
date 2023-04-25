@@ -4,18 +4,21 @@ import CategoryAdminPage from "../pages/admin/CategoryAdminPage/CategoryAdminPag
 import EditCategoryPage from "../pages/admin/CategoryAdminPage/EditCategoryAdminPage";
 import DashBoardPage from "../pages/admin/DashBoardPage/DashBoardPage";
 import LoginAdminPage from "../pages/admin/LoginAdminPage/LoginAdminPage";
+import OrderAdminPage from "../pages/admin/OrderAdminPage/OrderAdminPage";
 import AddProductAdminPage from "../pages/admin/ProductAdminPage/AddProductAdminPage";
 import EditProductAdminPage from "../pages/admin/ProductAdminPage/EditProductAdminPage";
 import ProductAdminPage from "../pages/admin/ProductAdminPage/ProductAdminPage";
 import AddUserPage from "../pages/admin/UserPage/AddUserPage";
 import EditUserPage from "../pages/admin/UserPage/EditUserPage";
 import UserPage from "../pages/admin/UserPage/UserPage";
+import CartPage from "../pages/local/CartPage/CartPage";
 import CategoryPage from "../pages/local/CategoryPage/CategoryPage";
 import ChangePasswordPage from "../pages/local/ChangePasswordPage/ChangePasswordPage";
 import HomePage from "../pages/local/HomePage/HomePage";
 import LoginPage from "../pages/local/LoginPage/LoginPage";
 import ProductPage from "../pages/local/ProductPage.jsx/ProductPage";
 import ActivateAccountPage from "../pages/local/RegisterPage/ActivateAccountPage";
+import ForgotPasswordPage from "../pages/local/RegisterPage/ForgotPasswordPage";
 import RegisterPage from "../pages/local/RegisterPage/RegisterPage";
 import SearchPage from "../pages/local/SearchPage/SearchPage";
 
@@ -42,6 +45,10 @@ export const routes = [
         page: ChangePasswordPage,
     },
     {
+        path: '/forgot-password',
+        page: ForgotPasswordPage,
+    },
+    {
         path: '/product/:id',
         page: ProductPage,
     },
@@ -60,6 +67,10 @@ export const routes = [
     {
         path: '/category/:id?page=:page',
         page: CategoryPage,
+    },
+    {
+        path: '/cart',
+        page: CartPage,
     },
     {
         path: '/admin/login',
@@ -117,5 +128,8 @@ export const routes = [
         path: '/admin/product/edit/:id',
         page: EditProductAdminPage,
     },
-    
+    {
+        path: '/admin/order',
+        page: OrderAdminPage,
+    },
 ]

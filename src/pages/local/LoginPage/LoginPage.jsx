@@ -19,6 +19,7 @@ const LoginPage = () => {
 	const [error, setError] = useState()
 	const navigate = useNavigate()
     const registerSuccess = localStorage.getItem('registerSuccess')
+	const getForgotSuccess = localStorage.getItem('forgotPasswordSuccess')
 
 	function handleSubmit(event) {
 		event.preventDefault()
@@ -43,14 +44,17 @@ const LoginPage = () => {
 	}
 	setTimeout(function() {
         if(registerSuccess) localStorage.setItem('registerSuccess', "false")
-    },2000)
+    },1000)
+	setTimeout(function() {
+		if(getForgotSuccess) localStorage.setItem('forgotPasswordSuccess', "false")
+	},1000)
+
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
+
 	
-	// useEffect(() => {
-		
-	// }, [])
+	
     return(
         <React.Fragment>
             <HeaderComponent />
@@ -68,6 +72,7 @@ const LoginPage = () => {
                             <h2>ĐĂNG NHẬP</h2>
 							{status === 401 && <div id="errr">{error}</div>}
 							{registerSuccess==="true" && <div id="success-admin">Đăng ký thành công. Vui lòng đăng nhập</div> }
+							{getForgotSuccess==="true" && <div id="success-admin">Đổi mật khẩu thành công. Vui lòng đăng nhập</div> }
 							<form role="form" method="post" onSubmit={handleSubmit}>
 								<fieldset>
 									<div className="form-group">
@@ -107,7 +112,7 @@ const LoginPage = () => {
 								<br />
 								<p>
 									<span>Nếu chưa có tài khoản vui lòng </span>
-									<Link to="/register"> đăng ký</Link> tại đây. <Link to="/forgot-pass"> Quên mật khẩu</Link>
+									<Link to="/register" id="no-decoration"> đăng ký</Link> tại đây. <Link to="/forgot-password" id="no-decoration"> Quên mật khẩu</Link>
 								</p>
 							</form>
                         </div>

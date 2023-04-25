@@ -34,3 +34,23 @@
     margin-top: 10px;
     height: 30px;
 }
+#inpt {
+    width: 85%;
+}
+#sbmt {
+    margin-left: 5px;
+    width: 15%;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #e07070;
+    color: white;
+}
+.form-contain {
+    display: flex;
+}
+#no-decoration {
+    text-decoration: none;
+}
+#no-decoration:hover {
+    color: rgb(28, 150, 150);
+}
