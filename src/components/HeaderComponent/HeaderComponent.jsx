@@ -47,7 +47,7 @@ function handleLogOut() {
                   placeholder="Tìm kiếm"
                   aria-label="Search"
                 />
-                <button className="btn btn-danger mt-4 ml-1" type="submit">
+                <button className="btn btn-danger mt-4 ml-2 btn-search" type="submit">
                   Tìm kiếm
                 </button>
               </form>

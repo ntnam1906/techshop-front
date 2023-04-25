@@ -7,15 +7,19 @@ import NavbarComponent from "../../../components/NavbarComponent/NavbarComponent
 import SliderComponent from "../../../components/SliderComponent/SliderComponent";
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Buffer } from "buffer";
-import imgg from '../../../public/admin/img/products/Nokia-1-red.png'
 import axios from "axios";
+import { Button } from "react-bootstrap";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 const ProductPage = () => {
-	const [data, setData] = useState({})
+	const [data, setData] = useState([])
 	const { id } = useParams()
-	
+	const navigate = useNavigate()
+	const location = useLocation()
+	const access_token = localStorage.getItem('access_token')
 	useEffect(() => {
 
 		const fetchData = async () => {
@@ -30,13 +34,31 @@ const ProductPage = () => {
 		  fetchData();
 	}, [id])
 	const product = data.product
-	const imageUrl = product && URL.createObjectURL(new Blob([product.thumbnail.data.data], {type: product.thumbnail.contentType}));
-	console.log(imageUrl)
-
+	const handleAddOrder = () => {
+		if(access_token) {
+			if(product.is_stock === false) {
+				NotificationManager.error('Sản phẩm tạm thời đang hết hàng. Vui lòng quay lại sau');
+			}
+			else {
+				NotificationManager.success('Sản phẩm đã được thêm vào giỏ hàng');
+				axios.post(`http://localhost:3000/api/local/product/add-cart/${id}`, {message: "Add"}, {
+					headers: {
+						'token': `Beare ${access_token}`
+					}
+				})
+				.then(response => console.log(response))
+				.catch(error => console.log(error))
+			}
+		}
+		else {
+			navigate('/login', {state: location?.pathname})
+		}
+	}
     return(
         <React.Fragment>
+			<NotificationContainer />
+			
             <HeaderComponent />
-
             <div id="body">
                 <div className="container">
                     <div className="row">
@@ -62,17 +84,18 @@ const ProductPage = () => {
 										<li><span>Khuyến Mại:</span> {product && product.promotion}</li>
 										<li><hr/></li>
 										<li id="price">Giá Bán (chưa bao gồm VAT)</li>
-										<li id="price-number">{product && product.price}đ</li>
-										<li id="status-true">{product && product.is_stock == true ? 'Còn hàng' : 'Hết Hàng' }</li>
+										<li id="price-number">{product && product.price.toLocaleString()}đ</li>
+										<li id="status-true">{product && product.is_stock === true ? 'Còn hàng' : 'Hết Hàng' }</li>
 									</ul>
 									<div className="btn-contain">
 										<div id="add-cart">
-											<Link to="/product/add-cart/<%= product._id %>" id="buy-now">Mua ngay</Link>
+											<button className="custom-btn btn-7" onClick={handleAddOrder}>Mua ngay</button>
 										</div>
-										<div id="ibx">
-											<Link to="" id="ibx-now">Chat để nhận tư vấn</Link>
-										</div>
+										{/* <div id="ibx">
+											<Button to="" id="ibx-now">Chat để nhận tư vấn</Button>
+										</div> */}
 									</div>
+										
 								</div>
 							</div>
 							<div id="product-body" className="row">
@@ -135,7 +158,7 @@ const ProductPage = () => {
 												className="form-control"
 											></textarea>
 										</div>
-										<button type="submit" name="sbm" className="btn btn-primary">
+										<button type="submit" name="sbm" className="custom-btn btn-7">
 											Gửi
 										</button>
 									</form>

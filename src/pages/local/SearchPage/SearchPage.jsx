@@ -53,13 +53,13 @@ const SearchPage = () => {
                                    {data.length !== 0 ? dataPrd && dataPrd.map(product => {
                                     return (
                                         <div className="product-item card text-center" key={product._id}>
-                                            <Link to={`/product/${product._id}`}>
+                                            <Link to={`/product/${product._id}`} className="button four">
                                                 <img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name}/>
                                             </Link>
                                             <h4>
-                                                <Link to={`/product/${product._id}`}>{product.name}</Link>
+                                                <Link to={`/product/${product._id}`} id="no-deco">{product.name}</Link>
                                             </h4>
-                                            <p>Giá Bán: <span>{product.price}</span></p>
+                                            <p>Giá Bán: <span>{product.price.toLocaleString()}đ</span></p>
                                         </div>
                                     )
                                    })

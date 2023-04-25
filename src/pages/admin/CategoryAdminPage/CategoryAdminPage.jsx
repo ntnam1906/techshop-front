@@ -10,6 +10,8 @@ import {BsHouseDoor} from 'react-icons/bs'
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const CategoryAdminPage = () => {
     const [categories, setCategories] = useState([])
     const [status, setStatus] = useState()
@@ -27,15 +29,18 @@ const CategoryAdminPage = () => {
                 'token': `Beare ${access_token}`
             }
         })
-        .then(response => setCategories(response.data.categories))
+        .then(response => {
+            setCategories(response.data.categories)
+            setShouldUpdate(false)
+        })
         .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
     setTimeout(function() {
-        if(addCategorySuccess) localStorage.setItem('addCategorySuccess', "false")
-    },2000)
+        localStorage.setItem('addCategorySuccess', "false")
+    },1000)
     setTimeout(function() {
-        if(editCategorySuccess) localStorage.setItem('editCategorySuccess', "false")
-    },2000)
+        localStorage.setItem('editCategorySuccess', "false")
+    },1000)
     const totalCategories = categories.length
     function handleRemove(id) {
         axios.post(`http://localhost:3000/api/admin/category/delete/${id}`, {
@@ -52,9 +57,15 @@ const CategoryAdminPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-
+    if(status === 200) {
+		NotificationManager.success('Xóa danh mục thành công');
+        setStatus(null);
+        setShouldUpdate(true);
+	}
     return(
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -80,7 +91,6 @@ const CategoryAdminPage = () => {
 			</div>
             {addCategorySuccess==="true" && <div id="success-admin">Thêm tài khoản thành công</div> }
             {editCategorySuccess==="true" && <div id="success-admin">Sửa tài khoản thành công</div> }
-            {status===200 && <div id="success-admin">Xóa tài khoản thành công</div> }
 
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>

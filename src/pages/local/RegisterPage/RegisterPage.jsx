@@ -110,7 +110,7 @@ const RegisterPage = () => {
                                                 required
                                             />
                                         </div>
-                                        <button type="submit" className="btn btn-primary">Đăng ký</button>
+                                        <button type="submit" className="custom-btn btn-7">Đăng ký</button>
                                     </fieldset>
                                 </form>
                             </div>

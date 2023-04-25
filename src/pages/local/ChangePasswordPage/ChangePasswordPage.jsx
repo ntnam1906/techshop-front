@@ -5,7 +5,8 @@ import SliderComponent from "../../../components/SliderComponent/SliderComponent
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const ChangePasswordPage = () => {
 
 	const [formData, setFormData] = useState({
@@ -43,11 +44,16 @@ const ChangePasswordPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-	
+    if(status === 200) {
+		NotificationManager.success('Đổi mật khẩu thành công');
+        setStatus(null)
+	}
 
 
     return(
         <React.Fragment>
+			<NotificationContainer />
+
             <HeaderComponent />
 
             <div id="body">
@@ -62,7 +68,6 @@ const ChangePasswordPage = () => {
                             <SliderComponent />
                             <br />
                             <h2>Đổi mật khẩu</h2>
-                            {status === 200 && <div id="success-admin">Đổi mật khẩu thành công</div>}
                             {status === 400 && <div id="errr">{error}</div>}
                             <div className="panel-body">
                                 <form role="form" method="post" onSubmit={handleSubmit}>

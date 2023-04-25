@@ -6,9 +6,11 @@ import SideBarComponent from "../../../components/SideBarComponent/SideBarCompon
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
 import "./loginpage.css"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode"
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -18,14 +20,18 @@ const LoginPage = () => {
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
 	const navigate = useNavigate()
+	const location = useLocation()
     const registerSuccess = localStorage.getItem('registerSuccess')
 	const getForgotSuccess = localStorage.getItem('forgotPasswordSuccess')
-
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
 			axios.post('http://localhost:3000/api/local/login', formData).then((res) => {
-				navigate('/')
+				if(location?.state) {
+					navigate(location?.state)
+				}else {
+					navigate('/')
+				}
 				localStorage.setItem('access_token', res.data?.access_token)
 				
 			})
@@ -43,20 +49,26 @@ const LoginPage = () => {
 		
 	}
 	setTimeout(function() {
-        if(registerSuccess) localStorage.setItem('registerSuccess', "false")
+        localStorage.setItem('registerSuccess', "false")
     },1000)
 	setTimeout(function() {
-		if(getForgotSuccess) localStorage.setItem('forgotPasswordSuccess', "false")
+		localStorage.setItem('forgotPasswordSuccess', "false")
 	},1000)
 
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-
-	
+	if(registerSuccess === "true"){
+		NotificationManager.success('Đăng ký thành công. Vui lòng đăng nhập');
+	}
+	if(getForgotSuccess === "true") {
+		NotificationManager.success('Đổi mật khẩu thành công. Vui lòng đăng nhập');
+	}
 	
     return(
         <React.Fragment>
+			<NotificationContainer />
+
             <HeaderComponent />
             <div id="body">
                 <div className="container">
@@ -71,8 +83,7 @@ const LoginPage = () => {
                             <br />
                             <h2>ĐĂNG NHẬP</h2>
 							{status === 401 && <div id="errr">{error}</div>}
-							{registerSuccess==="true" && <div id="success-admin">Đăng ký thành công. Vui lòng đăng nhập</div> }
-							{getForgotSuccess==="true" && <div id="success-admin">Đổi mật khẩu thành công. Vui lòng đăng nhập</div> }
+							
 							<form role="form" method="post" onSubmit={handleSubmit}>
 								<fieldset>
 									<div className="form-group">
@@ -105,7 +116,7 @@ const LoginPage = () => {
 											/> Nhớ tài khoản
 										</label>
 									</div>
-									<button type="submit" className="btn btn-primary">
+									<button type="submit" className="custom-btn btn-7">
 										Đăng nhập
 									</button>
 								</fieldset>

@@ -86,7 +86,8 @@ const ForgotPasswordPage = () => {
                                                     autoFocus
                                                     required
                                                 />
-                                                <button type="submit" id="sbmt" onClick={handleSubmitToken}>Gửi mã xác minh</button>
+                                                <button className="btn btn-danger ml-2 btn-search" type="submit"><span style={{color: "white"}}>Gửi mã xác minh</span></button>
+
                                             </div>
                                         </div>
                                         <div className="form-group">
@@ -110,7 +111,7 @@ const ForgotPasswordPage = () => {
                                             />
                                         </div>
                                         
-                                        <button type="submit" className="btn btn-primary">Đổi mật khẩu</button>
+                                        <button type="submit" className="custom-btn btn-7">Đổi mật khẩu</button>
                                     </fieldset>
                                 </form>
                             </div>

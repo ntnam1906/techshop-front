@@ -11,6 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Buffer } from "buffer";
 import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const ProductAdminPage = () => {
     const [products, setProducts] = useState([])
     const [status, setStatus] = useState()
@@ -29,7 +31,10 @@ const ProductAdminPage = () => {
                 'token': `Beare ${access_token}`
             }
         })
-        .then(response => setProducts(response.data.products))
+        .then(response => {
+            setProducts(response.data.products)
+            setShouldUpdate(false)
+        })
         .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
 
@@ -56,8 +61,14 @@ const ProductAdminPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
+    if(status === 200) {
+		NotificationManager.success('Xóa sản phẩm thành công');
+        setStatus(null);
+        setShouldUpdate(true);
+	}
     return(
         <React.Fragment>
+            <NotificationContainer />
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -83,7 +94,6 @@ const ProductAdminPage = () => {
 			</div>
             {addProductSuccess==="true" && <div id="success-admin">Thêm sản phẩm thành công</div> }
             {editProductSuccess==="true" && <div id="success-admin">Cập nhật sản phẩm thành công</div> }
-            {status===200 && <div id="success-admin">Xóa sản phẩm thành công</div> }
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>
                     <tr>
@@ -102,7 +112,7 @@ const ProductAdminPage = () => {
                             <tr key={product._id}>
                                 <td>{index}</td>
                                 <td>{product.name}</td>
-                                <td>{product.price}</td>
+                                <td>{product.price.toLocaleString()} đ</td>
                                 <td><img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name} id="img-admin"/></td>
                                 <td>{product.is_stock === true ? "Còn hàng" : "Hết Hàng"}</td>
                                 <td>{product.cat_id && product.cat_id.title}</td>

@@ -73,7 +73,7 @@ const LoginAdminPage = () => {
                                         <input name="remember" type="checkbox" value="Remember Me" /> Nhớ tài khoản
                                     </label>
                                 </div>
-                                <button type="submit" className="btn btn-primary">Đăng nhập</button>
+                                <button type="submit" className="custom-btn btn-7">Đăng nhập</button>
                             </fieldset>
                         </form>
                     </div>

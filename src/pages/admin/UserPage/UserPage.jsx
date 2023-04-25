@@ -12,7 +12,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
 import jwt_decode from "jwt-decode"
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const UserPage = () => {
     const [users, setUsers] = useState([])
     const [status, setStatus] = useState()
@@ -34,6 +35,7 @@ const UserPage = () => {
             }
         });
           setUsers(response.data.users);
+          setShouldUpdate(false)
         }
         fetchData();
       }, [currentPage, shouldUpdate]);
@@ -62,10 +64,15 @@ const UserPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-    
+    if(status === 200) {
+		NotificationManager.success('Xóa tài khoản thành công');
+        setStatus(null);
+        setShouldUpdate(true);
+	}
     return(
 
         <React.Fragment>
+            <NotificationContainer />
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -91,7 +98,6 @@ const UserPage = () => {
 			    </div>
                 {addUserSuccess==="true" && <div id="success-admin">Thêm tài khoản thành công</div> }
                 {editUserSuccess==="true" && <div id="success-admin">Sửa tài khoản thành công</div> }
-                {status===200 && <div id="success-admin">Xóa tài khoản thành công</div> }
 
                 <Table striped bordered hover size="sm" className="tbl">
                     <thead>

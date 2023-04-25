@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import HeaderComponent from "../../../components/HeaderComponent/HeaderComponent";
-import DefaultComponent from "../../../components/DefaultComponent/DefaultComponent";
 import NavbarComponent from "../../../components/NavbarComponent/NavbarComponent";
 import SliderComponent from "../../../components/SliderComponent/SliderComponent";
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
@@ -43,13 +42,13 @@ const HomePage = () => {
                                     {featuredPrds && featuredPrds.map(feature =>{
                                         return (
                                             <div className="product-item card text-center" key={feature._id}>
-                                                <Link to= {`/product/${feature._id}`}>
+                                                <Link to= {`/product/${feature._id}`} className="button four">
                                                     <img src={`data:${feature.thumbnail.contentType};base64,${Buffer.from(feature.thumbnail.data).toString('base64')}`} alt={feature.name}/>
                                                 </Link>
                                                 <h4>
-                                                    <Link to={`/product/${feature._id}`}> {feature.name} </Link>
+                                                    <Link to={`/product/${feature._id}`} id="no-deco"> {feature.name} </Link>
                                                 </h4>
-                                                <p>Giá Bán: <span>{feature.price}đ</span></p>
+                                                <p>Giá Bán: <span>{feature.price.toLocaleString()}đ</span></p>
                                             </div>
                                         )
                                     })}
@@ -66,13 +65,13 @@ const HomePage = () => {
                                     {statusPrds && statusPrds.map(prod => {
                                         return (
                                             <div className="product-item card text-center" key={prod._id}>
-                                                <Link to= {`/product/${prod._id}`}>
+                                                <Link to= {`/product/${prod._id}`} className="button four">
                                                     <img src={`data:${prod.thumbnail.contentType};base64,${Buffer.from(prod.thumbnail.data).toString('base64')}`} alt={prod.name}/>
                                                 </Link>
                                                 <h4>
-                                                    <Link to={`/product/${prod._id}`}> {prod.name} </Link>
+                                                    <Link to={`/product/${prod._id}`} id="no-deco"> {prod.name} </Link>
                                                 </h4>
-                                                <p>Giá Bán: <span>{prod.price}đ</span></p>
+                                                <p>Giá Bán: <span>{prod.price.toLocaleString()}đ</span></p>
                                             </div>
                                         )
                                     })}

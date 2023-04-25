@@ -70,7 +70,8 @@ const ActivateAccountPage = () => {
                                     onChange={(e) => setToken(e.target.value)}
                                     />
                                 </FormGroup>
-                                <Button type="submit" id="sbm">Xác minh tài khoản</Button>
+                                <br></br>
+                                <button type="submit" className="custom-btn btn-7">Xác minh tài khoản</button>
                             </Form>
                             
                         </div>
