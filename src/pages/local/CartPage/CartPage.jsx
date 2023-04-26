@@ -5,7 +5,7 @@ import SliderComponent from "../../../components/SliderComponent/SliderComponent
 import SideBarComponent from "../../../components/SideBarComponent/SideBarComponent";
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../../public/local/css/cart.css"
 import { Buffer } from "buffer";
 import { Button } from "react-bootstrap";
@@ -14,16 +14,16 @@ import 'react-notifications/lib/notifications.css';
 
 const CartPage = () => {
     const [formData, setFormData] = useState({
-        name: "",
+        fullName: "",
 		phone: "",
-		mail: "",
-        add: ""
+		email: "",
+        address: ""
 	})
 	const [data, setData] = useState([])
 	const [status, setStatus] = useState()
     const [shouldUpdate, setShouldUpdate] = useState(false);
 	const access_token = localStorage.getItem('access_token')
-
+    const navigate = useNavigate()
     useEffect(() => {
         const fetchData = async () => {
 			try {
@@ -31,7 +31,6 @@ const CartPage = () => {
                 headers: {
                     'token': `Beare ${access_token}`
                 }});
-              console.log(data)
 			  setData(data);
               setShouldUpdate(false)
 			} catch (error) {
@@ -61,15 +60,35 @@ const CartPage = () => {
     const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-    const handleSubmit = () => {
-        console.log(formData)
-    }
+      function handleSubmit(event) {
+		event.preventDefault()
+		if (formData.fullName && formData.phone && formData.email && formData.address) {
+			axios.post('http://localhost:3000/api/local/cart-payment', formData, {
+                headers: {
+                    'token': `Beare ${access_token}`
+                }}).then((res) => {
+			  // handle response
+              setStatus(res.status)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+		  } else {
+			console.log("Please enter a username and pass");
+		  } 
+		
+	}
     if(status === 200) {
 		NotificationManager.success('Xóa sản phẩm thành công');
         setStatus(null);
         setShouldUpdate(true);
 	}
-
+    if(status === 201) {
+		NotificationManager.success('Mua thành công. Vui lòng thanh toán');
+        setStatus(null);
+        setShouldUpdate(true);
+        
+	}
     
     return(
         <React.Fragment>
@@ -136,10 +155,10 @@ const CartPage = () => {
                                             <input
                                                 placeholder="Họ và tên (bắt buộc)"
                                                 type="text"
-                                                name="name"
+                                                name="fullName"
                                                 className="form-control"
                                                 onChange={handleChange}
-                                                value={formData.name}
+                                                value={formData.fullName}
                                                 required
                                             />
                                         </div>
@@ -158,10 +177,10 @@ const CartPage = () => {
                                             <input
                                                 placeholder="Email (bắt buộc)"
                                                 type="text"
-                                                name="mail"
+                                                name="email"
                                                 className="form-control"
                                                 onChange={handleChange}
-                                                value={formData.mail}
+                                                value={formData.email}
                                                 required
                                             />
                                         </div>
@@ -169,10 +188,10 @@ const CartPage = () => {
                                             <input
                                                 placeholder="Địa chỉ nhà riêng hoặc cơ quan (bắt buộc)"
                                                 type="text"
-                                                name="add"
+                                                name="address"
                                                 className="form-control"
                                                 onChange={handleChange}
-                                                value={formData.add}
+                                                value={formData.address}
                                                 required
                                             />
                                         </div>

@@ -33,6 +33,7 @@ const LoginPage = () => {
 					navigate('/')
 				}
 				localStorage.setItem('access_token', res.data?.access_token)
+                localStorage.setItem('tokenExpiration', Date.now() + 7200000);
 				
 			})
 			.catch((error) => {

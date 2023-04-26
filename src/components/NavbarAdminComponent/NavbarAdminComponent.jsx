@@ -7,6 +7,19 @@ import {BsFillAirplaneEnginesFill} from 'react-icons/bs'
 import axios from "axios";
 const NavbarAdminPage = () => {
     const navigate = useNavigate()
+    setInterval(() => {
+        const tokenExpiration = localStorage.getItem('tokenExpiration');
+        const isTokenExpired = Date.now() > (tokenExpiration - 60000);
+      
+        if (isTokenExpired) {
+            handleLogOut()
+            localStorage.removeItem('access_admin_token')
+            localStorage.removeItem('tokenExpiration')
+            navigate('/admin/login')
+        } else {
+          // Token còn hạn, tiếp tục truy cập vào các trang cần xác thực
+        }
+      }, 7180000); 
     function handleLogOut() {
         localStorage.removeItem('access_admin_token')
 

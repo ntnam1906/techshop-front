@@ -13,16 +13,39 @@ const HeaderComponent = () => {
   if(access_token) {
     decoded = jwt_decode(access_token)
   }
-  console.log(decoded)
 function handleLogOut() {
   localStorage.removeItem('access_token')
+  localStorage.removeItem('tokenExpiration')
   axios.post('http://localhost:3000/api/local/logout')
   .then(response => {
     navigate('/login')
   })
   .catch(error => console.log(error))
 }
+////// Check token hết hạn
+
+setInterval(() => {
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    const isTokenExpired = Date.now() > (tokenExpiration - 60000);
   
+    if (isTokenExpired) {
+        handleLogOut()
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('tokenExpiration')
+        navigate('/login')
+    } else {
+      // Token còn hạn, tiếp tục truy cập vào các trang cần xác thực
+    }
+  }, 7180000); 
+  function handleLogOut() {
+    localStorage.removeItem('access_token')
+    axios.post('http://localhost:3000/api/local/logout')
+    .then(response => {
+      navigate('/login')
+    })
+    .catch(error => console.log(error))
+  }
+
   return (
     <React.Fragment>
       <div id="header">

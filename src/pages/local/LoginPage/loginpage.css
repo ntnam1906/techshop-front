@@ -185,3 +185,6 @@
   #no-deco {
     text-decoration: none;
   }
+  #no-deco:hover {
+    color: rgba(251,75,2,1);
+  }

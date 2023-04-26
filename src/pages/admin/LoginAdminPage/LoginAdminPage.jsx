@@ -22,6 +22,7 @@ const LoginAdminPage = () => {
 			  // handle response
                 navigate('/admin/dashboard')
                 localStorage.setItem('access_admin_token', res.data?.access_token)
+                localStorage.setItem('tokenExpiration', Date.now() + 7200000);
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -35,6 +36,7 @@ const LoginAdminPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
+    
 
     return(
         <div className="row">

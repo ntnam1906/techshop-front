@@ -60,7 +60,7 @@ const CategoryPage = () => {
                                                 <img src={`data:${product.thumbnail.contentType};base64,${Buffer.from(product.thumbnail.data).toString('base64')}`} alt={product.name}/>
                                                 </Link>
                                                 <h4>
-                                                    <Link to={`/product/${product._id}`} id="no-deco">
+                                                    <Link to={`/product/${product._id}`} id="no-deco" className="button four">
                                                         {product.name}
                                                     </Link>
                                                 </h4>

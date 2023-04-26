@@ -46,7 +46,7 @@ const HomePage = () => {
                                                     <img src={`data:${feature.thumbnail.contentType};base64,${Buffer.from(feature.thumbnail.data).toString('base64')}`} alt={feature.name}/>
                                                 </Link>
                                                 <h4>
-                                                    <Link to={`/product/${feature._id}`} id="no-deco"> {feature.name} </Link>
+                                                    <Link to={`/product/${feature._id}`} id="no-deco" className="button four"> {feature.name} </Link>
                                                 </h4>
                                                 <p>Giá Bán: <span>{feature.price.toLocaleString()}đ</span></p>
                                             </div>
@@ -64,12 +64,12 @@ const HomePage = () => {
                                 <div className="product-list card-deck">
                                     {statusPrds && statusPrds.map(prod => {
                                         return (
-                                            <div className="product-item card text-center" key={prod._id}>
+                                            <div className="product-item card text-center " key={prod._id}>
                                                 <Link to= {`/product/${prod._id}`} className="button four">
                                                     <img src={`data:${prod.thumbnail.contentType};base64,${Buffer.from(prod.thumbnail.data).toString('base64')}`} alt={prod.name}/>
                                                 </Link>
                                                 <h4>
-                                                    <Link to={`/product/${prod._id}`} id="no-deco"> {prod.name} </Link>
+                                                    <Link to={`/product/${prod._id}`} id="no-deco" className="button four"> {prod.name} </Link>
                                                 </h4>
                                                 <p>Giá Bán: <span>{prod.price.toLocaleString()}đ</span></p>
                                             </div>

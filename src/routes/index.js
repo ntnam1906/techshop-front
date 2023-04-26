@@ -16,6 +16,7 @@ import CategoryPage from "../pages/local/CategoryPage/CategoryPage";
 import ChangePasswordPage from "../pages/local/ChangePasswordPage/ChangePasswordPage";
 import HomePage from "../pages/local/HomePage/HomePage";
 import LoginPage from "../pages/local/LoginPage/LoginPage";
+import OrderPage from "../pages/local/OrderPage/OrderPage";
 import ProductPage from "../pages/local/ProductPage.jsx/ProductPage";
 import ActivateAccountPage from "../pages/local/RegisterPage/ActivateAccountPage";
 import ForgotPasswordPage from "../pages/local/RegisterPage/ForgotPasswordPage";
@@ -71,6 +72,10 @@ export const routes = [
     {
         path: '/cart',
         page: CartPage,
+    },
+    {
+        path: '/order',
+        page: OrderPage,
     },
     {
         path: '/admin/login',

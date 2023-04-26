@@ -7,20 +7,50 @@ import FooterComponent from "../../../components/FooterComponent/FooterComponent
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "../../../public/local/css/cart.css"
-
+import { Button } from "react-bootstrap";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 const OrderPage = () => {
-	const [data, setData] = useState()
+	const [data, setData] = useState([])
+    const [status, setStatus] = useState()
+    const [shouldUpdate, setShouldUpdate] = useState(false);
+	const access_token = localStorage.getItem('access_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/local/cart')
-        .then(response => setData(response.data))
+        axios.get('http://localhost:3000/api/local/order', {
+            headers: {
+                'token': `Beare ${access_token}`
+            }})
+        .then(response => {
+            setData(response.data)
+            setShouldUpdate(false)
+        })
         .catch(error => console.log(error))
-    }, [])
-    const dataCart = data.dataCart
-    const totalMoney = data.totalMoney
+    }, [shouldUpdate])
+    
+    function handleCancle(id) {
+        axios.post(`http://localhost:3000/api/local/order-delete/${id}`,{
+            message: "delete order"
+        }, {
+            headers: {
+                'token': `Beare ${access_token}`
+            }})
+        .then(response => {
+            setShouldUpdate(true);
+            setStatus(response.status)
+        })
+        .catch(error => console.log(error))
+    }
+    if(status === 201) {
+		NotificationManager.success('Hủy đơn hàng thành công');
+        setStatus(null);
+        setShouldUpdate(true);
+        
+	}
     return(
         <React.Fragment>
+            <NotificationContainer />
             <HeaderComponent />
             <div id="body">
                 <div className="container">
@@ -32,123 +62,50 @@ const OrderPage = () => {
                     <div className="row">
                         <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                             <SliderComponent />
+                            <br />
+                            <h2>Lịch sử đơn hàng</h2>
                             <div id="my-cart">
-                                <div class="row">
-                                    <div class="cart-nav-item col-lg-7 col-md-7 col-sm-12">
-                                        Lịch sử đơn hàng
+                                <div className="row">
+                                    <div className="cart-nav-item col-lg-5 col-md-5 col-sm-12">
+                                        Đơn hàng
                                     </div>
-                                    <div class="cart-nav-item col-lg-2 col-md-2 col-sm-12">
+                                    <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
                                         Tùy chọn
                                     </div>
-                                    <div class="cart-nav-item col-lg-3 col-md-3 col-sm-12">Giá</div>
+                                    <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">Tổng cộng</div>
+                                    <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tình trạng</div>
                                 </div>
-                                <form method="post" action="/cart-reload">
-                                    {dataCart && dataCart.map(cart => {
+                                <form>
+                                    {data.orders && data.orders.map(order => {
                                         return (
-                                            <div class="cart-item row">
-                                                <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                                                    <img
-                                                        src="/static/local/images/<%= cart.items.thumbnail %>"
-                                                    />
-                                                    <h4>{cart.items.name}</h4>
+                                            <div className="cart-item row" key={order._id}>
+                                                <div className="cart-nav-item col-lg-5 col-md-5 col-sm-12">
+                                                    {order.products.map(product => {
+                                                        return (<h4 key={product._id}>{product.items.name}, </h4>)
+                                                    })}
+                                                    
                                                 </div>
-
-                                                <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                                                    <input
-                                                        type="number"
-                                                        id="quantity"
-                                                        class="form-control form-blue quantity"
-                                                        value="1"
-                                                        min="1"
-                                                    />
+                                                <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
+                                                    {(order.isPaid === false || order.isComfirmed === false) && order.isCancle === false  && <Button id="del-btn" onClick={() => handleCancle(order._id)}>Hủy đơn hàng</Button>}
                                                 </div>
-                                                <div class="cart-price col-lg-3 col-md-3 col-sm-12">
-                                                    <b>{cart.items.price} đ</b>
-                                                    <a href="/cart-delete">Xóa</a>
+                                                <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">{Number.isInteger(order.totalPrice) && order.totalPrice.toLocaleString()}</div>
+                                                <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
+                                                    {order.isPaid === false && order.isCancle === false && order.isComfirmed === false && <span style={{color: "#ffc107"}}>Chưa thanh toán</span>}
+                                                    {order.isCancle === true && <span style={{color: "#dc3545"}}>Đã hủy</span>}
+                                                    {order.isPaid === true && order.isCancle === false && order.isComfirmed === true && <span style={{color: "#28a745"}}>Đã xác nhận</span>}
+                                                    
+                                                    
                                                 </div>
+                                                
                                             </div>
                                         )
                                     })}
 
 
-                                    
-                                    <div class="row">
-                                        <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                                            <button
-                                                id="update-cart"
-                                                class="btn btn-success"
-                                                type="submit"
-                                                name="sbm"
-                                            >
-                                                Cập nhật giỏ hàng
-                                            </button>
-                                        </div>
-                                        <div class="cart-total col-lg-2 col-md-2 col-sm-12">
-                                            <b>Tổng cộng:</b>
-                                        </div>
-                                        <div class="cart-price col-lg-3 col-md-3 col-sm-12">
-                                            <b>{totalMoney} đ</b>
-                                        </div>
-                                    </div>
                                 </form>
                             </div>
                            
-                            <div id="customer">
-                                <form method="post">
-                                    <div class="row">
-                                        <div id="customer-name" class="col-lg-4 col-md-4 col-sm-12">
-                                            <input
-                                                placeholder="Họ và tên (bắt buộc)"
-                                                type="text"
-                                                name="name"
-                                                class="form-control"
-                                                required
-                                            />
-                                        </div>
-                                        <div id="customer-phone" class="col-lg-4 col-md-4 col-sm-12">
-                                            <input
-                                                placeholder="Số điện thoại (bắt buộc)"
-                                                type="text"
-                                                name="phone"
-                                                class="form-control"
-                                                required
-                                            />
-                                        </div>
-                                        <div id="customer-mail" class="col-lg-4 col-md-4 col-sm-12">
-                                            <input
-                                                placeholder="Email (bắt buộc)"
-                                                type="text"
-                                                name="mail"
-                                                class="form-control"
-                                                required
-                                            />
-                                        </div>
-                                        <div id="customer-add" class="col-lg-12 col-md-12 col-sm-12">
-                                            <input
-                                                placeholder="Địa chỉ nhà riêng hoặc cơ quan (bắt buộc)"
-                                                type="text"
-                                                name="add"
-                                                class="form-control"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="row">
-                                    <div class="by-now col-lg-6 col-md-6 col-sm-12">
-                                        <a href="/cart-payment">
-                                            <b>Mua ngay</b>
-                                            <span>Giao hàng tận nơi siêu tốc</span>
-                                        </a>
-                                    </div>
-                                    <div class="by-now col-lg-6 col-md-6 col-sm-12">
-                                        <a href="#">
-                                            <b>Trả góp Online</b>
-                                            <span>Vui lòng call 081 5656 456</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <SideBarComponent />
