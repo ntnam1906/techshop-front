@@ -37,10 +37,22 @@ const ProductPage = () => {
 	const handleAddOrder = () => {
 		if(access_token) {
 			if(product.is_stock === false) {
-				NotificationManager.error('Sản phẩm tạm thời đang hết hàng. Vui lòng quay lại sau');
+				const notificationId = NotificationManager.error("", "Sản phẩm tạm thời đang hết hàng. Vui lòng quay lại sau",1000);
+				setTimeout(() => {
+					const notification = NotificationManager.notifications
+					if (notification && notification.length > 0) {
+					NotificationManager.remove(notificationId);
+					}
+				}, 1000);
 			}
 			else {
-				NotificationManager.success('Sản phẩm đã được thêm vào giỏ hàng');
+				const notificationId = NotificationManager.success("", "Sản phẩm đã được thêm vào giỏ hàng",1500);
+				setTimeout(() => {
+					const notification = NotificationManager.notifications
+					if (notification && notification.length > 0) {
+					NotificationManager.remove(notificationId);
+					}
+				}, 1500);
 				axios.post(`http://localhost:3000/api/local/product/add-cart/${id}`, {message: "Add"}, {
 					headers: {
 						'token': `Beare ${access_token}`

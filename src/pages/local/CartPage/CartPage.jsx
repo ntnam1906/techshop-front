@@ -57,6 +57,13 @@ const CartPage = () => {
                 'token': `Beare ${access_token}`
             }})
         .then(response => {
+            const notificationId = NotificationManager.success("", "Xóa sản phẩm thành công",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+            }, 1000);
             setShouldUpdate(true);
             setStatus(response.status)
         })
@@ -77,7 +84,13 @@ const CartPage = () => {
                     'token': `Beare ${access_token}`
                 }}).then((res) => {
 			  // handle response
-              setStatus(res.status)
+              const notificationId = NotificationManager.success("", "Mua thành công. Vui lòng thanh toán",1000);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                    }
+                }, 1000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -87,17 +100,8 @@ const CartPage = () => {
 		  } 
 		
 	}
-    if(status === 200) {
-		NotificationManager.success('Xóa sản phẩm thành công');
-        setStatus(null);
-        setShouldUpdate(true);
-	}
-    if(status === 201) {
-		NotificationManager.success('Mua thành công. Vui lòng thanh toán');
-        setStatus(null);
-        setShouldUpdate(true);
-        
-	}
+    
+   
     
     return(
         <React.Fragment>

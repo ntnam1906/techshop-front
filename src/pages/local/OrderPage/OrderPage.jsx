@@ -37,17 +37,18 @@ const OrderPage = () => {
                 'token': `Beare ${access_token}`
             }})
         .then(response => {
+            const notificationId = NotificationManager.success("", "Hủy đơn hàng thành công",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 1000);
             setShouldUpdate(true);
-            setStatus(response.status)
         })
         .catch(error => console.log(error))
     }
-    if(status === 201) {
-		NotificationManager.success('Hủy đơn hàng thành công');
-        setStatus(null);
-        setShouldUpdate(true);
-        
-	}
+    
     return(
         <React.Fragment>
             <NotificationContainer />
