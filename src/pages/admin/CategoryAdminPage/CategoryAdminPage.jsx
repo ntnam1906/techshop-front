@@ -89,8 +89,8 @@ const CategoryAdminPage = () => {
 					<i className="glyphicon glyphicon-plus"></i> Thêm danh mục
 				</Link>
 			</div>
-            {addCategorySuccess==="true" && <div id="success-admin">Thêm tài khoản thành công</div> }
-            {editCategorySuccess==="true" && <div id="success-admin">Sửa tài khoản thành công</div> }
+            {addCategorySuccess==="true" && <div id="success-admin">Thêm danh mục thành công</div> }
+            {editCategorySuccess==="true" && <div id="success-admin">Sửa danh mục thành công</div> }
 
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>

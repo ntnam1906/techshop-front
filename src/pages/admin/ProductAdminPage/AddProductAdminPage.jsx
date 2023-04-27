@@ -9,7 +9,6 @@ import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
-import { values } from "lodash";
 const AddProductAdminPage = () => {
     const [formData, setFormData] = useState({
         prd_name: "",

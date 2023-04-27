@@ -11,7 +11,7 @@ import axios from "axios";
 import { Buffer } from "buffer";
 import PaginationComponent from "../../../components/PaginationComponent/PaginationComponent";
 const SearchPage = () => {
-    const[data, setData] = useState({})
+    const[data, setData] = useState([])
     const[dataPrd, setDataPrd] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const localtion = useLocation()
@@ -25,7 +25,9 @@ const SearchPage = () => {
         })
         .catch(error => console.log(error))
     }, [])
-    const totalProducts = dataPrd.length
+    const totalProducts = Array.isArray(dataPrd) && dataPrd.length || 0
+    console.log(totalProducts)
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
@@ -47,7 +49,7 @@ const SearchPage = () => {
                             <div className="products">
                                 <div id="search-result">
                                     Kết quả tìm kiếm với sản phẩm:
-                                    <span>  {keyword} ({data && data.length})</span>
+                                    <span>  {keyword} ({totalProducts})</span>
                                 </div>
                                 <div className="product-list card-deck">
                                    {data.length !== 0 ? dataPrd && dataPrd.map(product => {
