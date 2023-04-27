@@ -12,6 +12,8 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
 import _ from 'lodash'
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const EditUserPage = () => {
     const [formData, setFormData] = useState({
         full_name: "",
@@ -24,7 +26,10 @@ const EditUserPage = () => {
     const { id } = useParams()
     const [data, setData] = useState({})
     const access_token = localStorage.getItem('access_admin_token')
-
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
     useEffect(() => {
         axios.get('http://localhost:3000/api/admin/user', {
             headers: {
@@ -42,16 +47,28 @@ const EditUserPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass && formData.role && formData.full_name) {
+            if (!validateEmail(formData.email)) {
+                NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+                return;
+              }
+            if(formData.role !== "member" && formData.role !== "admin") {
+                NotificationManager.error('Vai trò phải là member hoặc admin. Vui lòng nhập lại');
+                return;
+            }
 			axios.post(`http://localhost:3000/api/admin/user/edit/${id}`, formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }
             }).then((res) => {
 			  // handle response
-                if(res.status === 201) {
-                    localStorage.setItem('editUserSuccess', true)
-                    navigate('/admin/user')
-                }
+              const notificationId = NotificationManager.success("", "Sửa tài khoản thành công", 700);
+              setTimeout(() => {
+                  const notification = NotificationManager.notifications
+                  if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                  }
+                }, 700);
+              setTimeout(() => navigate('/admin/user'), 1000)
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -64,10 +81,15 @@ const EditUserPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-
+      if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+      }
     return(
 
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -87,7 +109,6 @@ const EditUserPage = () => {
                         <h1 className="page-header">Thành viên: {user && user.full_name}</h1>
                     </div>
                 </div>
-                {status === 404 && <div id="errr">{error}</div>}
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="panel panel-default">

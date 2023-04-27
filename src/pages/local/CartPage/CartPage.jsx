@@ -24,6 +24,11 @@ const CartPage = () => {
     const [shouldUpdate, setShouldUpdate] = useState(false);
 	const access_token = localStorage.getItem('access_token')
     const navigate = useNavigate()
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
     useEffect(() => {
         const fetchData = async () => {
 			try {
@@ -63,6 +68,10 @@ const CartPage = () => {
       function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.fullName && formData.phone && formData.email && formData.address) {
+            if (!validateEmail(formData.email)) {
+                NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+                return;
+              }
 			axios.post('http://localhost:3000/api/local/cart-payment', formData, {
                 headers: {
                     'token': `Beare ${access_token}`

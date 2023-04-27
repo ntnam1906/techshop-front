@@ -10,6 +10,8 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
 import _ from 'lodash'
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css'; 
 const EditCategoryPage = () => {
     const [formData, setFormData] = useState({
         cat_name: "",
@@ -41,11 +43,14 @@ const EditCategoryPage = () => {
                     'token': `Beare ${access_token}`
                 }
             }).then((res) => {
-			  // handle response
-                if(res.status === 200) {
-                    localStorage.setItem('editCategorySuccess', true)
-                    navigate('/admin/category')
-                }
+                const notificationId = NotificationManager.success("", "Sửa danh mục thành công.", 700);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                      NotificationManager.remove(notificationId);
+                    }
+                  }, 700);
+                setTimeout(() => navigate('/admin/category'), 1000)
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -56,10 +61,15 @@ const EditCategoryPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-
+      if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+      }
     return(
 
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -79,7 +89,7 @@ const EditCategoryPage = () => {
                         <h1 className="page-header">Danh mục: {category && category.title}</h1>
                     </div>
                 </div>
-                {status === 404 && <div id="errr">{error}</div>}
+                
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="panel panel-default">

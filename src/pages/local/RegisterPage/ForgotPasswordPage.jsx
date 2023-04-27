@@ -6,26 +6,39 @@ import SideBarComponent from "../../../components/SideBarComponent/SideBarCompon
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 const ForgotPasswordPage = () => {
 	const [formData, setFormData] = useState({
 		newPassword: "",
         token: "",
         email: ""
 	})
-
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
     const [success, setSuccess] = useState("")
     const navigate = useNavigate()
 	function handleSubmit(event) {
-		event.preventDefault()
+        event.preventDefault()
+        if (!validateEmail(formData.email)) {
+            NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+            return;
+          }
 		axios.post('http://localhost:3000/api/local/forgot-password', formData)
         .then(response => {
-            setStatus(response.status)
-            if(status === 200) {
-                localStorage.setItem('forgotPasswordSuccess', true)
-                navigate('/login')
-            }
+            const notificationId = NotificationManager.success("", "Đổi mật khẩu thành công. Vui lòng đăng nhập",700);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 700);
+            setTimeout(() => navigate('/login'), 1000)
         })
         .catch(error => {
             setStatus(error.response.status)
@@ -34,6 +47,10 @@ const ForgotPasswordPage = () => {
     }
     function handleSubmitToken(event) {
 		event.preventDefault()
+        if (!validateEmail(formData.email)) {
+            NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+            return;
+        }
         axios.post('http://localhost:3000/api/local/send-mail', {
             email: formData.email
         })
@@ -50,9 +67,19 @@ const ForgotPasswordPage = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
 
-
+    if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+    } 
+    if(status === 201) {
+        NotificationManager.success(success);
+        setStatus(null)
+    } 
+    
     return(
         <React.Fragment>
+			<NotificationContainer />
+            
             <HeaderComponent />
 
             <div id="body">
@@ -68,8 +95,6 @@ const ForgotPasswordPage = () => {
                             <br />
                             <h1>Quên mật khẩu</h1>
 
-                            {status === 404 && <div id="errr">{error}</div>}
-                            {status === 201 && <div id="success-admin">{success}</div>}
                             <div className="panel-body">
                                 <form role="form" method="post" onSubmit={handleSubmit}>
                                     <fieldset>
@@ -86,8 +111,7 @@ const ForgotPasswordPage = () => {
                                                     autoFocus
                                                     required
                                                 />
-                                                <button className="btn btn-danger ml-2 btn-search" type="submit"><span style={{color: "white"}}>Gửi mã xác minh</span></button>
-
+                                                <button className="btn btn-danger ml-2 btn-search" onClick={handleSubmitToken}><span style={{color: "white"}}>Gửi mã xác minh</span></button>
                                             </div>
                                         </div>
                                         <div className="form-group">
@@ -98,6 +122,7 @@ const ForgotPasswordPage = () => {
                                                 className="form-control"
                                                 value={formData.token}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                         <div className="form-group">
@@ -108,6 +133,7 @@ const ForgotPasswordPage = () => {
                                                 className="form-control"
                                                 value={formData.newPassword}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                         

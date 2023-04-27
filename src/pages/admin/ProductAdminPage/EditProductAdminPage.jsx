@@ -10,6 +10,8 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
 import _ from "lodash";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const AddProductAdminPage = () => {
     const [formData, setFormData] = useState({
         prd_name: "",
@@ -77,11 +79,14 @@ const AddProductAdminPage = () => {
 				'token': `Beare ${access_token}`
 			}
 		}).then((res) => {
-            // handle response
-            if(res.status === 201) {
-                localStorage.setItem('editProductSuccess', true)
-                navigate('/admin/product')
-            }
+            const notificationId = NotificationManager.success("", "Sửa sản phẩm thành công", 700);
+              setTimeout(() => {
+                  const notification = NotificationManager.notifications
+                  if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                  }
+                }, 700);
+              setTimeout(() => navigate('/admin/product'), 1000)
         })
         .catch((error) => {
             setStatus(error.response.status)
@@ -111,9 +116,15 @@ const AddProductAdminPage = () => {
 			thumbnail: event.target.files[0] // Lấy file ảnh từ input
 		});
     }
+	if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+      }
     return(
 
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -133,7 +144,7 @@ const AddProductAdminPage = () => {
                         <h1 className="page-header">{product && product.name}</h1>
                     </div>
                 </div>
-                {status === 404 && <div id="errr">{error}</div>}
+                
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="panel panel-default">

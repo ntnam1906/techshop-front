@@ -21,8 +21,7 @@ const LoginPage = () => {
 	const [error, setError] = useState()
 	const navigate = useNavigate()
 	const location = useLocation()
-    const registerSuccess = localStorage.getItem('registerSuccess')
-	const getForgotSuccess = localStorage.getItem('forgotPasswordSuccess')
+    
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
@@ -49,23 +48,11 @@ const LoginPage = () => {
 		  } 
 		
 	}
-	setTimeout(function() {
-        localStorage.setItem('registerSuccess', "false")
-    },1000)
-	setTimeout(function() {
-		localStorage.setItem('forgotPasswordSuccess', "false")
-	},1000)
-
+	
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-	if(registerSuccess === "true"){
-		NotificationManager.success('Đăng ký thành công. Vui lòng đăng nhập');
-	}
-	if(getForgotSuccess === "true") {
-		NotificationManager.success('Đổi mật khẩu thành công. Vui lòng đăng nhập');
-	}
-	
+
     return(
         <React.Fragment>
 			<NotificationContainer />

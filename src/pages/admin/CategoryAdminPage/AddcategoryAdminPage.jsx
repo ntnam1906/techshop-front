@@ -9,6 +9,8 @@ import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 const AddCategoryPage = () => {
     const [formData, setFormData] = useState({
@@ -27,10 +29,14 @@ const AddCategoryPage = () => {
                 }
             }).then((res) => {
 			  // handle response
-                if(res.status === 201) {
-                    localStorage.setItem('addCategorySuccess', true)
-                    navigate('/admin/category')
-                }
+              const notificationId = NotificationManager.success("", "Thêm danh mục thành công", 700);
+              setTimeout(() => {
+                  const notification = NotificationManager.notifications
+                  if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                  }
+                }, 700);
+              setTimeout(() => navigate('/admin/category'), 1000)
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -42,10 +48,15 @@ const AddCategoryPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-
+      if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+      }
     return(
 
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />
@@ -65,7 +76,6 @@ const AddCategoryPage = () => {
                         <h1 className="page-header">Thêm danh mục</h1>
                     </div>
                 </div>
-                {status === 404 && <div id="errr">{error}</div>}
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="panel panel-default">

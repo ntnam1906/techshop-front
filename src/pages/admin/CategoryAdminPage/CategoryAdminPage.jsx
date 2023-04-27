@@ -18,9 +18,6 @@ const CategoryAdminPage = () => {
     const [shouldUpdate, setShouldUpdate] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const addCategorySuccess = localStorage.getItem('addCategorySuccess')
-    const editCategorySuccess = localStorage.getItem('editCategorySuccess')
-
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
@@ -35,12 +32,7 @@ const CategoryAdminPage = () => {
         })
         .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
-    setTimeout(function() {
-        localStorage.setItem('addCategorySuccess', "false")
-    },1000)
-    setTimeout(function() {
-        localStorage.setItem('editCategorySuccess', "false")
-    },1000)
+    
     const totalCategories = categories.length
     function handleRemove(id) {
         axios.post(`http://localhost:3000/api/admin/category/delete/${id}`, {
@@ -49,6 +41,13 @@ const CategoryAdminPage = () => {
             }
         })
         .then(response => {
+		    const notificationId = NotificationManager.success("", "Xóa danh mục thành công",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 1000);
             setShouldUpdate(true);
             setStatus(response.status)
         })
@@ -57,11 +56,7 @@ const CategoryAdminPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-    if(status === 200) {
-		NotificationManager.success('Xóa danh mục thành công');
-        setStatus(null);
-        setShouldUpdate(true);
-	}
+    
     return(
         <React.Fragment>
 			<NotificationContainer />
@@ -89,8 +84,6 @@ const CategoryAdminPage = () => {
 					<i className="glyphicon glyphicon-plus"></i> Thêm danh mục
 				</Link>
 			</div>
-            {addCategorySuccess==="true" && <div id="success-admin">Thêm danh mục thành công</div> }
-            {editCategorySuccess==="true" && <div id="success-admin">Sửa danh mục thành công</div> }
 
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>

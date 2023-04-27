@@ -6,7 +6,8 @@ import SideBarComponent from "../../../components/SideBarComponent/SideBarCompon
 import FooterComponent from "../../../components/FooterComponent/FooterComponent";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const RegisterPage = () => {
 
 	const [formData, setFormData] = useState({
@@ -15,19 +16,32 @@ const RegisterPage = () => {
 		pass: "",
         re_pass: ""
 	})
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
     const navigate = useNavigate()
 
 	function handleSubmit(event) {
 		event.preventDefault()
+        if (!validateEmail(formData.email)) {
+            NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+            return;
+          }
 		if (formData.email && formData.pass && formData.re_pass && formData.full_name) {
 			axios.post('http://localhost:3000/api/local/register', formData).then((res) => {
 			  // handle response
-              if(res.status === 201) {
-                localStorage.setItem('registerSuccess', true)
-                navigate('/login')
-            }
+                const notificationId = NotificationManager.success("", "Đăng kí thành công. Vui lòng đăng nhập", 700);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                      NotificationManager.remove(notificationId);
+                    }
+                  }, 700);
+                setTimeout(() => navigate('/login'), 1000)
+            
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -42,10 +56,15 @@ const RegisterPage = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
 	
-
-
+    if(status === 401) {
+        NotificationManager.error(error);
+        setStatus(null)
+    }
+    
     return(
         <React.Fragment>
+			<NotificationContainer />
+
             <HeaderComponent />
 
             <div id="body">
@@ -60,7 +79,6 @@ const RegisterPage = () => {
                             <SliderComponent />
                             <br />
                             <h2>ĐĂNG KÝ</h2>
-                            {status === 401 && <div id="errr">{error}</div>}
                             <div className="panel-body">
                                 <form role="form" method="post" onSubmit={handleSubmit}>
                                     <fieldset>

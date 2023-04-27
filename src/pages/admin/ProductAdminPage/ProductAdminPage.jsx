@@ -19,9 +19,6 @@ const ProductAdminPage = () => {
     const [shouldUpdate, setShouldUpdate] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const addProductSuccess = localStorage.getItem('addProductSuccess')
-    const editProductSuccess = localStorage.getItem('editProductSuccess')
-
     const navigate = useNavigate();
     const access_token = localStorage.getItem('access_admin_token')
 
@@ -38,13 +35,7 @@ const ProductAdminPage = () => {
         .catch(error => navigate('/admin/login'))
     }, [shouldUpdate])
 
-    setTimeout(function() {
-        if(addProductSuccess) localStorage.setItem('addProductSuccess', "false")
-    },2000)
-    setTimeout(function() {
-        if(editProductSuccess) localStorage.setItem('editProductSuccess', "false")
-    },2000)
-
+ 
     const totalProducts = products.length
     function handleRemove(id) {
         axios.post(`http://localhost:3000/api/admin/product/delete/${id}`, {
@@ -53,6 +44,13 @@ const ProductAdminPage = () => {
             }
         })
         .then(response => {
+            const notificationId = NotificationManager.success("", "Xóa sản phẩm thành công",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 1000);
             setShouldUpdate(true);
             setStatus(response.status)
         })
@@ -61,11 +59,7 @@ const ProductAdminPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-    if(status === 200) {
-		NotificationManager.success('Xóa sản phẩm thành công');
-        setStatus(null);
-        setShouldUpdate(true);
-	}
+    
     return(
         <React.Fragment>
             <NotificationContainer />
@@ -92,8 +86,7 @@ const ProductAdminPage = () => {
 					<i className="glyphicon glyphicon-plus"></i> Thêm sản phẩm
 				</Link>
 			</div>
-            {addProductSuccess==="true" && <div id="success-admin">Thêm sản phẩm thành công</div> }
-            {editProductSuccess==="true" && <div id="success-admin">Cập nhật sản phẩm thành công</div> }
+
             <Table striped bordered hover size="sm" className="tbl">
                 <thead>
                     <tr>

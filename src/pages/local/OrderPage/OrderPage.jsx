@@ -93,7 +93,7 @@ const OrderPage = () => {
                                                     {order.isPaid === false && order.isCancle === false && order.isComfirmed === false && <span style={{color: "#ffc107"}}>Chưa thanh toán</span>}
                                                     {order.isCancle === true && <span style={{color: "#dc3545"}}>Đã hủy</span>}
                                                     {order.isPaid === true && order.isCancle === false && order.isComfirmed === true && <span style={{color: "#28a745"}}>Đã xác nhận</span>}
-                                                    
+                                                    {order.isPaid === true && order.isCancle === false && order.isComfirmed === false && <span style={{color: "#ffc107"}}>Chờ xác nhận</span>}
                                                     
                                                 </div>
                                                 

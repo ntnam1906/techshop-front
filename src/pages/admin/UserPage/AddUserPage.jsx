@@ -10,6 +10,9 @@ import {BsHouseDoor} from 'react-icons/bs'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 const AddUserPage = () => {
     const [formData, setFormData] = useState({
         full_name: "",
@@ -22,19 +25,35 @@ const AddUserPage = () => {
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_admin_token')
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass && formData.role && formData.full_name) {
+            if (!validateEmail(formData.email)) {
+                NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
+                return;
+              }
+            if(formData.role !== "member" && formData.role !== "admin") {
+                NotificationManager.error('Vai trò phải là member hoặc admin. Vui lòng nhập lại');
+                return;
+            }
 			axios.post('http://localhost:3000/api/admin/user/add', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }
             }).then((res) => {
 			  // handle response
-                if(res.status === 201) {
-                    localStorage.setItem('addUserSuccess', true)
-                    navigate('/admin/user')
-                }
+              const notificationId = NotificationManager.success("", "Thêm tài khoản thành công", 700);
+              setTimeout(() => {
+                  const notification = NotificationManager.notifications
+                  if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                  }
+                }, 700);
+              setTimeout(() => navigate('/admin/user'), 1000)
 			})
 			.catch((error) => {
 				setStatus(error.response.status)
@@ -48,10 +67,15 @@ const AddUserPage = () => {
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	  };
-
+      if(status === 404) {
+        NotificationManager.error(error);
+        setStatus(null)
+      }
     return(
 
         <React.Fragment>
+			<NotificationContainer />
+
             <NavbarAdminPage />
                 
             <SideBarAdminComponent />

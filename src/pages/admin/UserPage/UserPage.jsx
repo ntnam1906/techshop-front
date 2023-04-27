@@ -41,13 +41,6 @@ const UserPage = () => {
       }, [currentPage, shouldUpdate]);
       const totalUsers = users.length
 
-    setTimeout(function() {
-        if(addUserSuccess) localStorage.setItem('addUserSuccess', "false")
-    },2000)
-    setTimeout(function() {
-        if(editUserSuccess) localStorage.setItem('editUserSuccess', "false")
-    },2000)
-
 
     function handleRemove(id) {
         axios.post(`http://localhost:3000/api/admin/user/delete/${id}`, {
@@ -56,6 +49,13 @@ const UserPage = () => {
             }
         })
         .then(response => {
+            const notificationId = NotificationManager.success("", "Xóa tài khoản thành công",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 1000);
             setShouldUpdate(true);
             setStatus(response.status)
         })
@@ -64,11 +64,7 @@ const UserPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-    if(status === 200) {
-		NotificationManager.success('Xóa tài khoản thành công');
-        setStatus(null);
-        setShouldUpdate(true);
-	}
+    
     return(
 
         <React.Fragment>
