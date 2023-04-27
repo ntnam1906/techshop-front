@@ -7,11 +7,12 @@ import FooterComponent from "../../../components/FooterComponent/FooterComponent
 import axios from "axios";
 import { useNavigate  } from 'react-router-dom'
 import { Form, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const ActivateAccountPage = () => {
 	const [token, setToken] = useState('');
 
-	const [status, setStatus] = useState()
-	const [error, setError] = useState()
+
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_token')
 	function handleSubmit(event) {
@@ -23,14 +24,26 @@ const ActivateAccountPage = () => {
                 }
             }).then((res) => {
 			  // handle response
-              if(res.status === 201) {
-                localStorage.setItem('activeSuccess', true)
-                navigate('/')
-            }
+              localStorage.removeItem('access_token')
+              const notificationId = NotificationManager.success("", "Kích hoạt tài khoản thành công", 700);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                      NotificationManager.remove(notificationId);
+                    }
+                  }, 700);
+                localStorage.setItem('access_token', res.data?.access_token)
+                localStorage.setItem('tokenExpiration', Date.now() + 7200000);
+                setTimeout(() => navigate('/'), 1000)
 			})
 			.catch((error) => {
-				setStatus(error.response.status)
-				setError(error.response.data.message)
+				const notificationId = NotificationManager.error("", "Mã xác minh không chính xác", 1000);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                      NotificationManager.remove(notificationId);
+                    }
+                  }, 1000);
 			})
 		  } else {
 			console.log("Please enter a username and pass");
@@ -42,6 +55,8 @@ const ActivateAccountPage = () => {
 
     return(
         <React.Fragment>
+			<NotificationContainer />
+
             <HeaderComponent />
 
             <div id="body">
@@ -59,7 +74,6 @@ const ActivateAccountPage = () => {
                             <br/>
                             <h4>Mã xác minh đã được gửi đến Email của bạn. Vui lòng kiểm tra Email và nhập mã xác minh tại đây: </h4>
 
-                            {status === 500 && <div id="errr">{error}</div>}
                             
                             <Form onSubmit={handleSubmit} style={{marginTop: 14 + 'px'}}>
                                 <FormGroup controlId="formToken">

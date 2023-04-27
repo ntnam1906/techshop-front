@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../public/local/css/home.css'
 import '../../public/local/css/bootstrap.css'
 import logo from '../../public/local/images/Tech-Shop-Logo.png'
@@ -9,10 +9,13 @@ import axios from "axios";
 const HeaderComponent = () => {
   const navigate = useNavigate()
   const access_token = localStorage.getItem('access_token')
-  let decoded = []
-  if(access_token) {
-    decoded = jwt_decode(access_token)
-  }
+  const [decoded, setDecoded] = useState([])
+  useEffect(() => {
+    if(access_token) {
+      setDecoded(jwt_decode(access_token))
+    }
+  },[access_token])
+  console.log(decoded)
 function handleLogOut() {
   localStorage.removeItem('access_token')
   localStorage.removeItem('tokenExpiration')
