@@ -59,7 +59,16 @@ const UserPage = () => {
             setShouldUpdate(true);
             setStatus(response.status)
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            const notificationId = NotificationManager.error("", "Không thể tự xóa chính mình",1000);
+            setTimeout(() => {
+                const notification = NotificationManager.notifications
+                if (notification && notification.length > 0) {
+                  NotificationManager.remove(notificationId);
+                }
+              }, 1000);
+            setShouldUpdate(true);
+            console.log(error)})
     }
     const handlePageChange = (page) => {
         setCurrentPage(page);
