@@ -84,13 +84,16 @@ const CartPage = () => {
                     'token': `Beare ${access_token}`
                 }}).then((res) => {
 			  // handle response
-              const notificationId = NotificationManager.success("", "Mua thành công. Vui lòng thanh toán",1000);
+              const notificationId = NotificationManager.success("", "Mua thành công. Vui lòng thanh toán",800);
                 setTimeout(() => {
                     const notification = NotificationManager.notifications
                     if (notification && notification.length > 0) {
                     NotificationManager.remove(notificationId);
                     }
-                }, 1000);
+                }, 800);
+                if(res.data.id) {
+                    setTimeout(() => navigate(`/payment/${res.data.id}`), 1000)
+                }
 			})
 			.catch((error) => {
 				console.log(error)
@@ -208,6 +211,7 @@ const CartPage = () => {
                                                 required
                                             />
                                         </div>
+                                        
                                         <button className="custom-btn btn-7" type="submit"><span>Mua ngay</span></button>
                                     </div>
                                 </form>

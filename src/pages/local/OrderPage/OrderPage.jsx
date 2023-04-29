@@ -67,20 +67,27 @@ const OrderPage = () => {
                             <h2>Lịch sử đơn hàng</h2>
                             <div id="my-cart">
                                 <div className="row">
-                                    <div className="cart-nav-item col-lg-5 col-md-5 col-sm-12">
+                                    <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">
+                                        Mã đơn hàng
+                                    </div>
+                                    <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">
                                         Đơn hàng
                                     </div>
                                     <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
                                         Tùy chọn
                                     </div>
-                                    <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">Tổng cộng</div>
+                                    <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tổng cộng</div>
                                     <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tình trạng</div>
                                 </div>
                                 <form>
                                     {data.orders && data.orders.map(order => {
                                         return (
                                             <div className="cart-item row" key={order._id}>
-                                                <div className="cart-nav-item col-lg-5 col-md-5 col-sm-12">
+                                                <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">
+                                                    {(order.isPaid === false && order.isCancle === false) && <Link to={`/payment/${order._id}`} id="no-decoration">{order._id}</Link>}
+                                                    {(order.isComfirmed === true || order.isPaid === true || order.isCancle === true) && <span>{order._id}</span>}
+                                                </div>
+                                                <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">
                                                     {order.products.map(product => {
                                                         return (<h4 key={product._id}>{product.items.name}, </h4>)
                                                     })}
@@ -89,7 +96,7 @@ const OrderPage = () => {
                                                 <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
                                                     {(order.isPaid === false || order.isComfirmed === false) && order.isCancle === false  && <Button id="del-btn" onClick={() => handleCancle(order._id)}>Hủy đơn hàng</Button>}
                                                 </div>
-                                                <div className="cart-nav-item col-lg-3 col-md-3 col-sm-12">{Number.isInteger(order.totalPrice) && order.totalPrice.toLocaleString()}</div>
+                                                <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">{Number.isInteger(order.totalPrice) && order.totalPrice.toLocaleString()} vnđ</div>
                                                 <div className="cart-nav-item col-lg-2 col-md-2 col-sm-12">
                                                     {order.isPaid === false && order.isCancle === false && order.isComfirmed === false && <span style={{color: "#ffc107"}}>Chưa thanh toán</span>}
                                                     {order.isCancle === true && <span style={{color: "#dc3545"}}>Đã hủy</span>}
