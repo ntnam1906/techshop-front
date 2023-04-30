@@ -16,16 +16,24 @@ import 'react-notifications/lib/notifications.css';
 
 const ProductPage = () => {
 	const [data, setData] = useState([])
+	const [comments, setComments] = useState([])
+	const [shouldUpdate, setShouldUpdate] = useState(false)
 	const { id } = useParams()
 	const navigate = useNavigate()
 	const location = useLocation()
 	const access_token = localStorage.getItem('access_token')
+
+	const [formData, setFormData] = useState({
+        comm_details: "",
+	})
+
 	useEffect(() => {
 
 		const fetchData = async () => {
 			try {
 			  const { data } = await axios.get(`http://localhost:3000/api/local/product/${id}`);
 			  setData(data);
+			  setShouldUpdate(false)
 			} catch (error) {
 			  console.log(error);
 			}
@@ -33,6 +41,20 @@ const ProductPage = () => {
 		
 		  fetchData();
 	}, [id])
+
+	useEffect(() => {
+
+		const fetchData = async () => {
+			try {
+			  const { data } = await axios.get(`http://localhost:3000/api/local/get-comment/${id}`);
+			  setComments(data.comments);
+			} catch (error) {
+			  console.log(error);
+			}
+		  };
+		
+		  fetchData();
+	}, [shouldUpdate])
 	const product = data.product
 	const handleAddOrder = () => {
 		if(access_token) {
@@ -65,6 +87,41 @@ const ProductPage = () => {
 		else {
 			navigate('/login', {state: location?.pathname})
 		}
+	}
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	  };
+	const handleComment = function(event) {
+		event.preventDefault()
+		
+		axios.post(`http://localhost:3000/api/local/comment-product/${id}`, formData, {
+			headers: {
+				'token': `Beare ${access_token}`
+			}})
+			.then((res) => {
+			// handle response
+				const notificationId = NotificationManager.success("", "Bình luận sản phẩm thành công",1500);
+				setTimeout(() => {
+					const notification = NotificationManager.notifications
+					if (notification && notification.length > 0) {
+					NotificationManager.remove(notificationId);
+					}
+				}, 1500);
+				setShouldUpdate(true)
+				formData.comm_details = ""
+			})
+			.catch(error => {
+				if(error.response.status === 401) {
+					const notificationId = NotificationManager.error("", "Bạn phải đăng nhập để tiếp tục",1500);
+					setTimeout(() => {
+						const notification = NotificationManager.notifications
+						if (notification && notification.length > 0) {
+						NotificationManager.remove(notificationId);
+						}
+					}, 1500);
+					setTimeout(() => navigate('/login'), 2000)
+				}
+			})
 	}
     return(
         <React.Fragment>
@@ -160,7 +217,7 @@ const ProductPage = () => {
 							<div id="comment" className="row">
 								<div className="col-lg-12 col-md-12 col-sm-12">
 									<h3>Bình luận sản phẩm</h3>
-									<form method="post">
+									<form method="post" onSubmit={handleComment}>
 										<div className="form-group">
 											<label>Nội dung:</label>
 											<textarea
@@ -168,6 +225,8 @@ const ProductPage = () => {
 												required
 												rows="8"
 												className="form-control"
+												onChange={handleChange}
+												value={formData.comm_details}
 											></textarea>
 										</div>
 										<button type="submit" name="sbm" className="custom-btn btn-7">
@@ -178,20 +237,23 @@ const ProductPage = () => {
 							</div>
 
 
-							{/* <div id="comments-list" className="row">
-								<div className="col-lg-12 col-md-12 col-sm-12">
-									<div className="comment-item">
-										<ul>
-											<li><b><%= comment.user_id.full_name%></b></li>
-											<li><%= comment.createdAt%></li>
-											<li>
-												<p><%= comment.body %></p>
-											</li>
-										</ul>
-									</div>
-									<%}%>
-								</div>
-							</div> */}
+							<div id="comments-list" className="row" style={{marginTop: "10px"}}>
+									{comments && comments.map(comment => {
+										return (
+										<div className="col-lg-12 col-md-12 col-sm-12" style={{ marginTop: '10px', backgroundColor: "#ccc", borderRadius: '10px', paddingLeft: '-20px'}}>
+
+											<div className="comment-item" key={comment._ic}>
+												<ul>
+													<li style={{listStyleType: "none"}}><b>{comment.user_id.full_name}</b></li>
+													<li style={{listStyleType: "none"}}>
+														<p>{comment.body}</p>
+													</li>
+												</ul>
+											</div>
+										</div>
+										)
+									})}
+							</div>
 						</div>
 					</div>
 
