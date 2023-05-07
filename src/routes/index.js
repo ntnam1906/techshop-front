@@ -2,6 +2,7 @@ import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import AddCategoryPage from "../pages/admin/CategoryAdminPage/AddcategoryAdminPage";
 import CategoryAdminPage from "../pages/admin/CategoryAdminPage/CategoryAdminPage";
 import EditCategoryPage from "../pages/admin/CategoryAdminPage/EditCategoryAdminPage";
+import CommentAdminPage from "../pages/admin/CommentAdminPage/CommentAdminPage";
 import DashBoardPage from "../pages/admin/DashBoardPage/DashBoardPage";
 import LoginAdminPage from "../pages/admin/LoginAdminPage/LoginAdminPage";
 import OrderAdminPage from "../pages/admin/OrderAdminPage/OrderAdminPage";
@@ -140,5 +141,9 @@ export const routes = [
     {
         path: '/admin/order',
         page: OrderAdminPage,
+    },
+    {
+        path: '/admin/comment',
+        page: CommentAdminPage,
     },
 ]

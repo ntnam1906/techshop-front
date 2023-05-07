@@ -18,7 +18,7 @@ const SideBarAdminComponent = () => {
             <li><Link to="/admin/category"><BsDatabase /> Quản lý danh mục</Link></li>
             <li><Link to="/admin/product"><BsBagDash /> Quản lý sản phẩm</Link></li>
             <li><Link to="/admin/order"><BsBagHeartFill /> Quản lý đơn hàng</Link></li>
-            <li><Link to="#"><BsChatLeftText /> Quản lý bình luận</Link></li>
+            <li><Link to="/admin/comment"><BsChatLeftText /> Quản lý bình luận</Link></li>
             <li><Link to="#"><BsBadgeAdFill /> Quản lý quảng cáo</Link></li>
             <li><Link to="#"><BsNut /> Cấu hình</Link></li>
         </ul>
