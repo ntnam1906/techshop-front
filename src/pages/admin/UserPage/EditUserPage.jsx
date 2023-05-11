@@ -31,7 +31,7 @@ const EditUserPage = () => {
         return emailRegex.test(email);
     }
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/user', {
+        axios.get('https://localhost:3000/api/admin/user', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -55,7 +55,7 @@ const EditUserPage = () => {
                 NotificationManager.error('Vai trò phải là member hoặc admin. Vui lòng nhập lại');
                 return;
             }
-			axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/user/edit/${id}`, formData, {
+			axios.post(`https://localhost:3000/api/admin/user/edit/${id}`, formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

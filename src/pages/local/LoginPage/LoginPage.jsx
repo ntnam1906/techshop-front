@@ -25,7 +25,7 @@ const LoginPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
-			axios.post('https://techshop-backend-0cyn.onrender.com/api/local/login', formData).then((res) => {
+			axios.post('https://localhost:3000/api/local/login', formData).then((res) => {
 				if(location?.state) {
 					navigate(location?.state)
 				}else {

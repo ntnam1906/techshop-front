@@ -18,7 +18,7 @@ const ActivateAccountPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (token) {
-			axios.post('https://techshop-backend-0cyn.onrender.com/api/local/active', {token: token}, {
+			axios.post('https://localhost:3000/api/local/active', {token: token}, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

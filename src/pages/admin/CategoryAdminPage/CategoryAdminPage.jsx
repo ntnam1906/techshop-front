@@ -21,7 +21,7 @@ const CategoryAdminPage = () => {
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/category' , {
+        axios.get('https://localhost:3000/api/admin/category' , {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -35,7 +35,7 @@ const CategoryAdminPage = () => {
     
     const totalCategories = categories.length
     function handleRemove(id) {
-        axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/category/delete/${id}`, {
+        axios.post(`https://localhost:3000/api/admin/category/delete/${id}`, {
             headers: {
                 'token': `Beare ${access_token}`
             }

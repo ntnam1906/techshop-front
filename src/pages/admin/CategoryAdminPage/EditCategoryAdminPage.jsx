@@ -23,7 +23,7 @@ const EditCategoryPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/category', {
+        axios.get('https://localhost:3000/api/admin/category', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -38,7 +38,7 @@ const EditCategoryPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.cat_name) {
-			axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/category/edit/${id}`, formData, {
+			axios.post(`https://localhost:3000/api/admin/category/edit/${id}`, formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

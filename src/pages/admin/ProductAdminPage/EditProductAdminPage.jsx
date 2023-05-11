@@ -38,7 +38,7 @@ const AddProductAdminPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/product', {
+        axios.get('https://localhost:3000/api/admin/product', {
             headers: {
                 'token': `Beare ${access_token}`
             }

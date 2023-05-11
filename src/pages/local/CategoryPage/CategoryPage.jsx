@@ -21,7 +21,7 @@ const CategoryPage = () => {
 
 		const fetchData = async () => {
 			try {
-			  const { data } = await axios.get(`https://techshop-backend-0cyn.onrender.com/api/local/category/${id}`);
+			  const { data } = await axios.get(`https://localhost:3000/api/local/category/${id}`);
 			  setProducts(data.products)
               setData(data)
 			} catch (error) {

@@ -20,7 +20,7 @@ const LoginAdminPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.email && formData.pass) {
-			axios.post('https://techshop-backend-0cyn.onrender.com/api/admin/login', formData).then((res) => {
+			axios.post('https://localhost:3000/api/admin/login', formData).then((res) => {
 			  // handle response
               const notificationId = NotificationManager.success("", "Đăng nhập thành công",700);
                 setTimeout(() => {

@@ -23,7 +23,7 @@ const AddCategoryPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.cat_name) {
-			axios.post('https://techshop-backend-0cyn.onrender.com/api/admin/category/add', formData, {
+			axios.post('https://localhost:3000/api/admin/category/add', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

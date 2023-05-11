@@ -23,7 +23,7 @@ const NavbarAdminPage = () => {
     function handleLogOut() {
         localStorage.removeItem('access_admin_token')
 
-        axios.post('https://techshop-backend-0cyn.onrender.com/api/admin/logout')
+        axios.post('https://localhost:3000/api/admin/logout')
         .then(response => {
           navigate('/admin/login')
         })

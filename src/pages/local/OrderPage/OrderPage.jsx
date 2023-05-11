@@ -18,7 +18,7 @@ const OrderPage = () => {
 	const access_token = localStorage.getItem('access_token')
 
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/local/order', {
+        axios.get('https://localhost:3000/api/local/order', {
             headers: {
                 'token': `Beare ${access_token}`
             }})
@@ -30,7 +30,7 @@ const OrderPage = () => {
     }, [shouldUpdate])
     
     function handleCancle(id) {
-        axios.post(`https://techshop-backend-0cyn.onrender.com/api/local/order-delete/${id}`,{
+        axios.post(`https://localhost:3000/api/local/order-delete/${id}`,{
             message: "delete order"
         }, {
             headers: {

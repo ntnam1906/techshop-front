@@ -36,7 +36,7 @@ const AddProductAdminPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/category', {
+        axios.get('https://localhost:3000/api/admin/category', {
             headers: {
                 'token': `Beare ${access_token}`
             }
