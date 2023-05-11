@@ -31,7 +31,7 @@ const ProductPage = () => {
 
 		const fetchData = async () => {
 			try {
-			  const { data } = await axios.get(`https://localhost:3000/api/local/product/${id}`);
+			  const { data } = await axios.get(`http://localhost:3000/api/local/product/${id}`);
 			  setData(data);
 			  setShouldUpdate(false)
 			} catch (error) {
@@ -46,7 +46,7 @@ const ProductPage = () => {
 
 		const fetchData = async () => {
 			try {
-			  const { data } = await axios.get(`https://localhost:3000/api/local/get-comment/${id}`);
+			  const { data } = await axios.get(`http://localhost:3000/api/local/get-comment/${id}`);
 			  setComments(data.comments);
 			} catch (error) {
 			  console.log(error);

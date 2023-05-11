@@ -31,7 +31,7 @@ const RegisterPage = () => {
             return;
           }
 		if (formData.email && formData.pass && formData.re_pass && formData.full_name) {
-			axios.post('https://localhost:3000/api/local/register', formData).then((res) => {
+			axios.post('http://localhost:3000/api/local/register', formData).then((res) => {
 			  // handle response
                 const notificationId = NotificationManager.success("", "Đăng kí thành công. Vui lòng đăng nhập", 700);
                 setTimeout(() => {

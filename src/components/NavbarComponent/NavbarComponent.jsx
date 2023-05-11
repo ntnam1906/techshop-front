@@ -7,7 +7,7 @@ const NavbarComponent = () => {
     const [data, setData] = useState({})
     
     useEffect(() => {
-        axios.get('https://localhost:3000/api/local')
+        axios.get('http://localhost:3000/api/local')
         .then(response => setData(response.data))
         .catch(error => console.log(error))
     }, [])

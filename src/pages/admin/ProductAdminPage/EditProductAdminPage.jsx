@@ -38,7 +38,7 @@ const AddProductAdminPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('https://localhost:3000/api/admin/product', {
+        axios.get('http://localhost:3000/api/admin/product', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -49,7 +49,7 @@ const AddProductAdminPage = () => {
     const product = _.find(products, {_id: id})
 
     useEffect(() => {
-        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/category', {
+        axios.get('http://localhost:3000/api/admin/category', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -73,7 +73,7 @@ const AddProductAdminPage = () => {
         formdata.append("prd_featured", formData.prd_featured);
         formdata.append("prd_details", formData.prd_details);
         // console.log(formData)
-        axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/product/edit/${id}`, formData, {
+        axios.post(`http://localhost:3000/api/admin/product/edit/${id}`, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 				'token': `Beare ${access_token}`

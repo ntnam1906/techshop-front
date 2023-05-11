@@ -19,7 +19,7 @@ const HeaderComponent = () => {
 function handleLogOut() {
   localStorage.removeItem('access_token')
   localStorage.removeItem('tokenExpiration')
-  axios.post('https://localhost:3000/api/local/logout')
+  axios.post('http://localhost:3000/api/local/logout')
   .then(response => {
     navigate('/login')
   })
@@ -42,7 +42,7 @@ setInterval(() => {
   }, 7180000); 
   function handleLogOut() {
     localStorage.removeItem('access_token')
-    axios.post('https://localhost:3000/api/local/logout')
+    axios.post('http://localhost:3000/api/local/logout')
     .then(response => {
       navigate('/login')
     })

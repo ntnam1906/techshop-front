@@ -29,7 +29,7 @@ const UserPage = () => {
     }
     useEffect(() => {
         async function fetchData() {
-          const response = await axios.get(`https://localhost:3000/api/admin/user?page=${currentPage}`, {
+          const response = await axios.get(`http://localhost:3000/api/admin/user?page=${currentPage}`, {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -43,7 +43,7 @@ const UserPage = () => {
 
 
     function handleRemove(id) {
-        axios.post(`https://localhost:3000/api/admin/user/delete/${id}`, {
+        axios.post(`http://localhost:3000/api/admin/user/delete/${id}`, {
             headers: {
                 'token': `Beare ${access_token}`
             }

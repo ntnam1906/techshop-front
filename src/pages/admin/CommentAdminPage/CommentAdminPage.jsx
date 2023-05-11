@@ -21,7 +21,7 @@ const CommentAdminPage = () => {
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('https://localhost:3000/api/admin/comment' , {
+        axios.get('http://localhost:3000/api/admin/comment' , {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -34,7 +34,7 @@ const CommentAdminPage = () => {
     }, [shouldUpdate])
     const comments = data.comments
     function handleCancle(id) {
-        axios.post(`https://localhost:3000/api/admin/comment/delete/${id}`)
+        axios.post(`http://localhost:3000/api/admin/comment/delete/${id}`)
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)

@@ -20,7 +20,7 @@ const ChangePasswordPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 		if (formData.currentPassword && formData.newPassword ) {
-			axios.post('https://localhost:3000/api/local/change-password', formData, {
+			axios.post('http://localhost:3000/api/local/change-password', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

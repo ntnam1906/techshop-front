@@ -32,7 +32,7 @@ const CartPage = () => {
     useEffect(() => {
         const fetchData = async () => {
 			try {
-			  const { data } = await axios.get('https://localhost:3000/api/local/cart', {
+			  const { data } = await axios.get('http://localhost:3000/api/local/cart', {
                 headers: {
                     'token': `Beare ${access_token}`
                 }});
@@ -50,7 +50,7 @@ const CartPage = () => {
     
     const totalMoney = data.totalMoney
     function handleDelete(id) {
-        axios.post(`https://localhost:3000/api/local/cart-delete/${id}`,{
+        axios.post(`http://localhost:3000/api/local/cart-delete/${id}`,{
             message: "delete"
         }, {
             headers: {
@@ -89,7 +89,7 @@ const CartPage = () => {
                 }, 2000);
                 return;
             }
-			axios.post('https://localhost:3000/api/local/cart-payment', formData, {
+			axios.post('http://localhost:3000/api/local/cart-payment', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }}).then((res) => {

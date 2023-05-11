@@ -29,7 +29,7 @@ const ForgotPasswordPage = () => {
             NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
             return;
           }
-		axios.post('https://localhost:3000/api/local/forgot-password', formData)
+		axios.post('http://localhost:3000/api/local/forgot-password', formData)
         .then(response => {
             const notificationId = NotificationManager.success("", "Đổi mật khẩu thành công. Vui lòng đăng nhập",700);
             setTimeout(() => {
@@ -51,7 +51,7 @@ const ForgotPasswordPage = () => {
             NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
             return;
         }
-        axios.post('https://localhost:3000/api/local/send-mail', {
+        axios.post('http://localhost:3000/api/local/send-mail', {
             email: formData.email
         })
         .then(response => {

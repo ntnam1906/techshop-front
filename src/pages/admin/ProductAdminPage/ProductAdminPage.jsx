@@ -23,7 +23,7 @@ const ProductAdminPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('https://localhost:3000/api/admin/product', {
+        axios.get('http://localhost:3000/api/admin/product', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -38,7 +38,7 @@ const ProductAdminPage = () => {
  
     const totalProducts = products.length
     function handleRemove(id) {
-        axios.post(`https://localhost:3000/api/admin/product/delete/${id}`, {
+        axios.post(`http://localhost:3000/api/admin/product/delete/${id}`, {
             headers: {
                 'token': `Beare ${access_token}`
             }

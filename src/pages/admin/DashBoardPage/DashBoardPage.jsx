@@ -15,7 +15,7 @@ const DashBoardPage = () => {
     const [data, setData] = useState({})
     const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('https://localhost:3000/api/admin/dashboard', {
+        axios.get('http://localhost:3000/api/admin/dashboard', {
             headers: {
                 'token': `Beare ${access_token}`
             }

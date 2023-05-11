@@ -18,7 +18,7 @@ const SearchPage = () => {
     const keyword = new URLSearchParams(localtion.search).get('keyword')
 
     useEffect(() =>{
-        axios.get(`https://localhost:3000/api/local/search?keyword=${keyword}`)
+        axios.get(`http://localhost:3000/api/local/search?keyword=${keyword}`)
         .then(response => {
             setData(response.data)
             setDataPrd(response.data.dataPrd)

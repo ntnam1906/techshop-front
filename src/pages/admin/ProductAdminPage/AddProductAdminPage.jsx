@@ -36,7 +36,7 @@ const AddProductAdminPage = () => {
     const access_token = localStorage.getItem('access_admin_token')
 
     useEffect(() => {
-        axios.get('https://localhost:3000/api/admin/category', {
+        axios.get('http://localhost:3000/api/admin/category', {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -60,7 +60,7 @@ const AddProductAdminPage = () => {
         formdata.append("prd_featured", formData.prd_featured);
         formdata.append("prd_details", formData.prd_details);
         console.log(formData)
-        axios.post('https://localhost:3000/api/admin/product/add', formData, {
+        axios.post('http://localhost:3000/api/admin/product/add', formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 				'token': `Beare ${access_token}`
