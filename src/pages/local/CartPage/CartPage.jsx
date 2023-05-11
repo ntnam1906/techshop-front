@@ -78,7 +78,17 @@ const CartPage = () => {
             if (!validateEmail(formData.email)) {
                 NotificationManager.error('Email không đúng định dạng. Vui lòng nhập lại');
                 return;
-              }
+            }
+            if (data.totalMoney === 0) {
+                const notificationId = NotificationManager.error("", "Bạn chưa có sản phẩm nào trong giỏ hàng !",1500);
+                setTimeout(() => {
+                    const notification = NotificationManager.notifications
+                    if (notification && notification.length > 0) {
+                    NotificationManager.remove(notificationId);
+                    }
+                }, 2000);
+                return;
+            }
 			axios.post('http://localhost:3000/api/local/cart-payment', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
