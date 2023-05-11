@@ -11,7 +11,7 @@ const HomePage = () => {
     const [data, setData] = useState({})
     
     useEffect(() =>{
-        axios.get('http://localhost:3000/api/local')
+        axios.get('https://techshop-backend-0cyn.onrender.com/api/local')
         .then (response => {
             setData(response.data)
         })

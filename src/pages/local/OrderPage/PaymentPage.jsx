@@ -20,7 +20,7 @@ const PaymentPage = () => {
 	const { id } = useParams()
     const navigate = useNavigate()
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/local/payment/${id}`, {
+        axios.get(`https://techshop-backend-0cyn.onrender.com/api/local/payment/${id}`, {
             headers: {
                 'token': `Beare ${access_token}`
             }})
@@ -33,7 +33,7 @@ const PaymentPage = () => {
     }, [shouldUpdate])
     let usd = total.toFixed(2).toString()
     const paymentSuccess = (email) => {
-        axios.post(`http://localhost:3000/api/local/payment-success/${id}`, {
+        axios.post(`https://techshop-backend-0cyn.onrender.com/api/local/payment-success/${id}`, {
             emailPayment: email
         },{
             headers: {

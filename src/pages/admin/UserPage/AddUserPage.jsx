@@ -40,7 +40,7 @@ const AddUserPage = () => {
                 NotificationManager.error('Vai trò phải là member hoặc admin. Vui lòng nhập lại');
                 return;
             }
-			axios.post('http://localhost:3000/api/admin/user/add', formData, {
+			axios.post('https://techshop-backend-0cyn.onrender.com/api/admin/user/add', formData, {
                 headers: {
                     'token': `Beare ${access_token}`
                 }

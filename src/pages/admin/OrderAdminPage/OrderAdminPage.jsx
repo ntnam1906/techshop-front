@@ -21,7 +21,7 @@ const OrderAdminPage = () => {
     const navigate = useNavigate()
     const access_token = localStorage.getItem('access_admin_token')
     useEffect(() => {
-        axios.get('http://localhost:3000/api/admin/order' , {
+        axios.get('https://techshop-backend-0cyn.onrender.com/api/admin/order' , {
             headers: {
                 'token': `Beare ${access_token}`
             }
@@ -34,7 +34,7 @@ const OrderAdminPage = () => {
     }, [shouldUpdate])
     const totalOrders = orders.length
     function handleCancle(id) {
-        axios.post(`http://localhost:3000/api/admin/order/cancle/${id}`)
+        axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/order/cancle/${id}`)
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)
@@ -42,7 +42,7 @@ const OrderAdminPage = () => {
         .catch(error => console.log(error))
     }
     function handleConfirm(id) {
-        axios.post(`http://localhost:3000/api/admin/order/confirm/${id}`)
+        axios.post(`https://techshop-backend-0cyn.onrender.com/api/admin/order/confirm/${id}`)
         .then(response => {
             setShouldUpdate(true);
             setStatus(response.status)
