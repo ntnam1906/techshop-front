@@ -60,7 +60,7 @@ const AddProductAdminPage = () => {
         formdata.append("prd_featured", formData.prd_featured);
         formdata.append("prd_details", formData.prd_details);
         console.log(formData)
-        axios.post('https://techshop-backend-0cyn.onrender.com/api/admin/product/add', formData, {
+        axios.post('https://localhost:3000/api/admin/product/add', formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 				'token': `Beare ${access_token}`
