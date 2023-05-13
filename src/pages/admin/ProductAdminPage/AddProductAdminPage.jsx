@@ -23,7 +23,7 @@ const AddProductAdminPage = () => {
         thumbnail: null,
         cat_id: "",
         prd_is_stock: "1",
-        prd_featured: "1",
+        prd_featured: "0",
         prd_details: ""
 	})
 	const [status, setStatus] = useState()
