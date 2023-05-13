@@ -218,7 +218,8 @@ const AddProductAdminPage = () => {
 									</div>
 									<div className="form-group">
 										<label>Danh mục</label>
-										<select name="cat_id" className="form-control" value={formData.cat_id} onChange={handleChange}>
+										<select name="cat_id" className="form-control" value={formData.cat_id} onChange={handleChange} required>
+											<option value="" disabled selected>Chọn một danh mục</option>
                                             {categories && categories.map(category => {
                                                 return(
                                                     <option value={category._id} key={category._id}>
