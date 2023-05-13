@@ -14,17 +14,17 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 const AddProductAdminPage = () => {
     const [formData, setFormData] = useState({
-        prd_name: "",
-		prd_price: "",
-		prd_warranty: "",
-        prd_accessories: "",
-        prd_promotion: "",
-        prd_new: "",
+        name: "",
+		price: "",
+		warranty: "",
+        accessories: "",
+        promotion: "",
+        status: "",
         thumbnail: null,
         cat_id: "",
-        prd_is_stock: "1",
-        prd_featured: "1",
-        prd_details: ""
+        is_stock: "1",
+        features: "0",
+        description: ""
 	})
 	const [status, setStatus] = useState()
 	const [error, setError] = useState()
@@ -43,11 +43,13 @@ const AddProductAdminPage = () => {
                 'token': `Beare ${access_token}`
             }
         })
-        .then(response => setProducts(response.data.products))
+        .then(response => {
+			setProducts(response.data.products)
+			setFormData(_.find(response.data.products, {_id: id}))
+		})
         .catch(error => console.log(error))
     }, [])
     const product = _.find(products, {_id: id})
-
     useEffect(() => {
         axios.get('http://localhost:3000/api/admin/category', {
             headers: {
@@ -61,17 +63,17 @@ const AddProductAdminPage = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
         const formdata = new FormData();
-        formdata.append("prd_name", formData.prd_name);
-        formdata.append("prd_price", formData.prd_price);
-        formdata.append("prd_warranty", formData.prd_warranty);
-        formdata.append("prd_accessories", formData.prd_accessories);
-        formdata.append("prd_promotion", formData.prd_promotion);
-        formdata.append("prd_new", formData.prd_new);
+        formdata.append("name", formData.name);
+        formdata.append("price", formData.price);
+        formdata.append("warranty", formData.warranty);
+        formdata.append("accessories", formData.accessories);
+        formdata.append("promotion", formData.promotion);
+        formdata.append("status", formData.status);
         formdata.append("thumbnail", formData.thumbnail); // Thêm ảnh vào FormData
         formdata.append("cat_id", formData.cat_id);
-        formdata.append("prd_is_stock", formData.prd_is_stock);
-        formdata.append("prd_featured", formData.prd_featured);
-        formdata.append("prd_details", formData.prd_details);
+        formdata.append("is_stock", formData.is_stock);
+        formdata.append("features", formData.features);
+        formdata.append("description", formData.description);
         // console.log(formData)
         axios.post(`http://localhost:3000/api/admin/product/edit/${id}`, formData, {
 			headers: {
@@ -155,69 +157,69 @@ const AddProductAdminPage = () => {
 									<div className="form-group">
 										<label>Tên sản phẩm</label>
 										<input
-											name="prd_name"
+											name="name"
 											required
 											className="form-control"
 											placeholder=""
                                             onChange={handleChange}
-                                            value={formData.prd_name}
+                                            value={formData.name}
 										/>
 									</div>
 
 									<div className="form-group">
 										<label>Giá sản phẩm</label>
 										<input
-											name="prd_price"
+											name="price"
 											required
 											type="number"
 											min="0"
 											className="form-control"
                                             onChange={handleChange}
-                                            value={formData.prd_price}
+                                            value={formData.price}
 										/>
 									</div>
 									<div className="form-group">
 										<label>Bảo hành</label>
 										<input
-											name="prd_warranty"
+											name="warranty"
 											required
 											type="text"
 											className="form-control" 
                                             onChange={handleChange}
-                                            value={formData.prd_warranty}
+                                            value={formData.warranty}
 										/>
 									</div>
 									<div className="form-group">
 										<label>Phụ kiện</label>
 										<input
-											name="prd_accessories"
+											name="accessories"
 											required
 											type="text"
 											className="form-control"
                                             onChange={handleChange}
-                                            value={formData.prd_accessories}
+                                            value={formData.accessories}
 										/>
 									</div>
 									<div className="form-group">
 										<label>Khuyến mãi</label>
 										<input
-											name="prd_promotion"
+											name="promotion"
 											required
 											type="text"
 											className="form-control" 
                                             onChange={handleChange}
-                                            value={formData.prd_promotion}
+                                            value={formData.promotion}
 										/>
 									</div>
 									<div className="form-group">
 										<label>Tình trạng</label>
 										<input
-											name="prd_new"
+											name="status"
 											required
 											type="text"
 											className="form-control"
                                             onChange={handleChange}
-                                            value={formData.prd_new}
+                                            value={formData.status}
 										/>
 									</div>
 								</div>
@@ -245,7 +247,7 @@ const AddProductAdminPage = () => {
 
 									<div className="form-group">
 										<label>Trạng thái</label>
-										<select name="prd_is_stock" className="form-control" onChange={handleChange} value={formData.prd_is_stock}>
+										<select name="is_stock" className="form-control" onChange={handleChange} value={formData.is_stock}>
 											<option value="1">Còn hàng</option>
 											<option value="0">Hết hàng</option>
 										</select>
@@ -256,7 +258,7 @@ const AddProductAdminPage = () => {
 										<div className="checkbox">
 											<label>
 												<input
-													name="prd_featured"
+													name="features"
 													type="checkbox"
 													value="1" 
                                                     onChange={handleChange}
@@ -267,12 +269,12 @@ const AddProductAdminPage = () => {
 									<div className="form-group">
 										<label>Mô tả sản phẩm</label>
 										<textarea
-											name="prd_details"
+											name="description"
 											required
 											className="form-control"
 											rows="3" 
                                             onChange={handleChange}
-                                            value={formData.prd_details}
+                                            value={formData.description}
 										></textarea>
 									</div>
 									<button name="sbm" type="submit" className="btn btn-success">
